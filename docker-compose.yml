@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    working_dir: /usr/src/app
+    command: >-
+      boot
+      -d cider/cider-nrepl:0.14.0
+
+      dev
+    #wait
+    #repl -s -p 40000 -b 0.0.0.0 -m cider.nrepl/cider-middleware
+    environment:
+      - BOOT_LOCAL_REPO=/usr/src/boot_repository
+    ports:
+      - "40000:40000"
+    volumes:
+      - boot_repository:/usr/src/boot_repository
+      - .:/usr/src/app
+volumes:
+  boot_repository:
