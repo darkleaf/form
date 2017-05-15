@@ -5,7 +5,7 @@
                  [org.clojure/clojurescript "1.9.542" :scope "provided"]
 
                  [pandeiro/boot-http          "0.7.1-SNAPSHOT" :scope "test"]
-                 [adzerk/boot-cljs "1.7.228-2" :scope "test"]
+                 [adzerk/boot-cljs "2.0.0" :scope "test"]
                  [adzerk/boot-cljs-repl "0.3.3" :scope "test"]
                  [org.clojure/tools.nrepl "0.2.12" :scope "test"]
                  [com.cemerick/piggieback "0.2.1" :scope "test"]
