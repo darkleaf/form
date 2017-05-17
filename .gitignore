@@ -1,1 +1,4 @@
 .nrepl-port
+/out
+/target
+/.cljs_node_repl
