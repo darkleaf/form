@@ -13,4 +13,4 @@ RUN echo \
 
 # cider repl fix
 RUN mkdir -p /Users/m_kuzmin/projects/github \
-    && ln -s /usr/src/app /Users/m_kuzmin/projects/github/forms
+    && ln -s /usr/src/app /Users/m_kuzmin/projects/github/form

@@ -1,6 +1,6 @@
 (ns darkleaf.form.bootstrap4
   (:require
-   [hiccup.core :as hiccup]
+   #_[hiccup.core :as hiccup]
    [darkleaf.form.context :as ctx]
    [darkleaf.form.abstract :as abstract]))
 
@@ -25,17 +25,22 @@
   (fn [initial-ctx]
     (let [ctx (ctx/conj-path initial-ctx id)
           data (ctx/get-data ctx)
-          elements (ctx/map ctx #(render-child % renderers))]
+          elements (ctx/reduce
+                    ctx
+                    (fn [acc ctx]
+                      (conj acc
+                            (render-child ctx renderers)))
+                    [])]
       (into [:div] elements))))
 
-(let [data {:title "Awesome"
-            :comments [{:text "foo"
-                        :author "bar"}]}
-      errors {[:title] ["can't be blank"]}
-      renderer (form
-                (text-input :title)
-                (nested :comments
-                        (text-input :text)
-                        (text-input :author)))
-      markup (renderer data errors)]
-  (hiccup/html markup))
+#_(let [data {:title "Awesome"
+              :comments [{:text "foo"
+                          :author "bar"}]}
+        errors {[:title] ["can't be blank"]}
+        renderer (form
+                  (text-input :title)
+                  (nested :comments
+                          (text-input :text)
+                          (text-input :author)))
+        markup (renderer data errors)]
+    (hiccup/html markup))

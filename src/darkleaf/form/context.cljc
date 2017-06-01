@@ -1,12 +1,14 @@
 (ns darkleaf.form.context
-  (:refer-clojure :exclude [map]))
+  (:refer-clojure :exclude [reduce])
+  (:require
+   [clojure.core :as clj]))
 
 (defprotocol Protocol
   (get-data [ctx])
   (get-errors [ctx])
   (get-name [ctx])
   (conj-path [ctx id])
-  (map [ctx f]))
+  (reduce [ctx f init]))
 
 (defrecord Record [path data errors name-prefix]
   Protocol
@@ -15,7 +17,7 @@
   (get-errors [_]
     (get errors path []))
   (get-name [_]
-    (reduce
+    (clj/reduce
      (fn [full-name id]
        (let [suffix (cond
                       (keyword? id) (str "[" (name id) "]")
@@ -26,11 +28,12 @@
 
   (conj-path [this id]
     (update this :path conj id))
-  (map [this f]
-    (map-indexed
-     (fn [i _]
-       (let [ctx (conj-path this i)]
-         (f ctx)))
+  (reduce [this f init]
+    (reduce-kv
+     (fn [acc k _]
+       (let [ctx (conj-path this k)]
+         (f acc ctx)))
+     init
      (get-data this))))
 
 (defn build [data errors name-prefix]

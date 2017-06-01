@@ -3,7 +3,10 @@
  :dependencies '[[org.clojure/clojure "1.8.0" :scope "provided"]
                  [org.clojure/clojurescript "1.9.542" :scope "provided"]
                  [hiccup "1.0.5" :scope "test"]
-                 [com.cemerick/piggieback "0.2.1" :scope "test"]])
+                 [reagent "0.6.2" :exclusions [cljsjs/react] :scope "test"]
+                 [cljsjs/react-with-addons "15.4.2-2" :scope "test"]
+                 [com.cemerick/piggieback "0.2.1" :scope "test"]
+                 [org.clojure/tools.nrepl "0.2.12" :scope "test"]])
 
 (require 'cljs.repl.node
          'cemerick.piggieback)
