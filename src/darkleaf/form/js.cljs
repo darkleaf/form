@@ -27,11 +27,14 @@
          (map js->clj)
          (into {}))))
 
+(defn form-data [node]
+  (-> (form-params node)
+      (nested-params/nest-params)
+      (keyword-params/keyify-params)))
+
 (let [utils js/React.addons.TestUtils
       element (r/as-element [component])
       x (.renderIntoDocument utils element)
       node (.findRenderedDOMComponentWithTag utils x "form")]
 
-  (-> (form-params node)
-      (nested-params/nest-params)
-      (keyword-params/keyify-params)))
+  (form-data node))
