@@ -14,31 +14,24 @@
         renderer (b/form
                   (b/text-input :title)
                   (b/nested :comments
-                          (b/text-input :text)
-                          (b/text-input :author)))
+                            (b/text-input :text)
+                            (b/text-input :author)))
         markup (renderer data errors)]
     markup))
 
-(defn form-data-entries [form-data]
-  (reduce
-   (fn [acc x]
-     (let [key (aget x 0)
-           val (aget x 1)]
-       (assoc acc key val)))
-   {}
-   (-> form-data
-       (.entries)
-       (es6-iterator-seq))))
-
-(defn fetch-form-data [form]
-  (let [form-data (js/FormData. form)
-        entries (form-data-entries form-data)]
-    (nested-params/nest-params entries)))
-
+(defn form-params [node]
+  (let [form-data (js/FormData. node)
+        entries (.entries form-data)]
+    (->> entries
+         (es6-iterator-seq)
+         (map js->clj)
+         (into {}))))
 
 (let [utils js/React.addons.TestUtils
       element (r/as-element [component])
       x (.renderIntoDocument utils element)
       node (.findRenderedDOMComponentWithTag utils x "form")]
-  (-> (fetch-form-data node)
+
+  (-> (form-params node)
+      (nested-params/nest-params)
       (keyword-params/keyify-params)))

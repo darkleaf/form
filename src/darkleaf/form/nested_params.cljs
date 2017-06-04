@@ -56,7 +56,7 @@
   "Takes a flat map of parameters and turns it into a nested map of
   parameters, using the function parse to split the parameter names
   into keys."
-  [params parse]
+  [params]
   (reduce
     (fn [m [k v]]
       (assoc-nested m (parse-nested-keys k) v))
