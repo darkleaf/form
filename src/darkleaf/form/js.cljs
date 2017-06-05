@@ -1,6 +1,5 @@
 (ns darkleaf.form.js
   (:require
-   [darkleaf.form.js-fix]
    [darkleaf.form.nested-params :as nested-params]
    [darkleaf.form.keyword-params :as keyword-params]
    [darkleaf.form.bootstrap4 :as b]
