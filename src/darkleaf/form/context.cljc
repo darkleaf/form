@@ -19,16 +19,14 @@
   (get-name [_]
     (clj/reduce
      (fn [full-name id]
-       (let [suffix (cond
-                      (keyword? id) (str "[" (name id) "]")
-                      (integer? id) "[]")]
-         (str full-name suffix)))
+       (str full-name "[" (name id) "]"))
      name-prefix
      path))
 
   (conj-path [this id]
     (update this :path conj id))
   (reduce [this f init]
+    ;; TODO: check for map with string keys
     (reduce-kv
      (fn [acc k _]
        (let [ctx (conj-path this k)]

@@ -5,10 +5,10 @@
    [darkleaf.form.abstract :as abstract]))
 
 (defn form [& renderers]
-  (fn [data errors]
+  (fn [data errors form-opts]
     (let [ctx (ctx/build data errors "form")
           elements (map #(% ctx) renderers)
-          form-element [:form]]
+          form-element [:form form-opts]]
       (into form-element elements))))
 
 (defn text-input [id]
