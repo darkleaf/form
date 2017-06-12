@@ -7,6 +7,7 @@
   (get-data [ctx])
   (get-errors [ctx])
   (get-name [ctx])
+  (get-id [ctx])
   (conj-path [ctx id])
   (reduce [ctx f init]))
 
@@ -22,6 +23,8 @@
        (str full-name "[" (name id) "]"))
      name-prefix
      path))
+  (get-id [_]
+    (last path))
 
   (conj-path [this id]
     (update this :path conj id))
