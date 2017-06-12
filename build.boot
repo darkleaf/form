@@ -4,9 +4,7 @@
  :dependencies '[[org.clojure/clojure "1.8.0" :scope "provided"]
                  [org.clojure/clojurescript "1.9.542" :scope "provided"]
 
-                 [hiccup "1.0.5" :scope "test"]
-                 [reagent "0.6.2" :exclusions [cljsjs/react] :scope "test"]
-                 [cljsjs/react-with-addons "15.4.2-2" :scope "test"]
+                 [reagent "0.6.2"]
 
                  [cider/cider-nrepl "0.15.0-SNAPSHOT" :scope "test"]
                  [refactor-nrepl "2.3.0-SNAPSHOT" :scope "test"]
