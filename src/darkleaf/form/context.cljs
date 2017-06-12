@@ -29,6 +29,9 @@
    {:displayName
     "ContextReceiver"
 
+    :shouldComponentUpdate
+    (fn [] true)
+
     :contextTypes
     (js-obj ctx-key (gobj/getValueByKeys js/React "PropTypes" "any" "isRequired"))
 
@@ -37,7 +40,6 @@
       (let [this (r/current-component)
             value (gobj/getValueByKeys this "context" ctx-key)]
         (into [component value] args)))}))
-
 
 (defn build [data errors on-change]
   {:data data
@@ -58,3 +60,8 @@
        (f acc ctx)))
    init
    (get-data -ctx)))
+
+(defn set-data [ctx value]
+  (let [{:keys [data path on-change]} ctx
+        new-data (assoc-in data path value)]
+    (on-change new-data)))

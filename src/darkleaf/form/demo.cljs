@@ -1,6 +1,7 @@
 (ns darkleaf.form.demo
   (:require
    [reagent.core :as r]
+   [goog.object :as gobj]
    [darkleaf.form.context :as ctx]))
 
 (enable-console-print!)
@@ -22,7 +23,12 @@
            value (ctx/get-data ctx)]
        [:div.form-group
         [:label label]
-        [:input.form-control {:type :text, :value value}]
+        [:input.form-control {:type :text
+                              :value value
+                              :on-change #(ctx/set-data ctx
+                                                        (gobj/getValueByKeys %
+                                                                             "target"
+                                                                             "value"))}]
         [:small.form-text.text-muted "Required"]]))))
 
 (def nested
@@ -36,17 +42,19 @@
         [tag opts])))))
 
 (defn component []
-  [ctx/provider (ctx/build initial-data {} prn)
-   [:form
-    [input :name "Name"]
-    [input :created-at "Created at"]
+  (let [data (r/atom initial-data)]
+    (fn []
+      [ctx/provider (ctx/build @data {} #(reset! data %))
+       [:form
+        [input :name "Name"]
+        [input :created-at "Created at"]
 
-    [:h2 "Tasks"]
-    [nested :tasks :div.row {}
-     [:div.col-sm-12.my-3
-      [:div.card
-       [:div.card-block
-        [input :name "Name"]]]]]]])
+        [:h2 "Tasks"]
+        [nested :tasks :div.row {}
+         [:div.col-sm-12.my-3
+          [:div.card
+           [:div.card-block
+            [input :name "Name"]]]]]]])))
 
 (r/render [component]
           (.getElementById js/document "point"))
