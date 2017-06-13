@@ -1,45 +1,31 @@
 (ns darkleaf.form.context
   (:require
    [goog.object :as gobj]
-   [reagent.core :as r]))
+   [rum.core :as rum]))
 
 (def ^:private ctx-key "ctx")
 
-(def provider
-  (r/create-class
-   {:displayName
-    "ContextProvider"
+(def ^:private provider-mixin
+  {:child-context
+   (fn [state]
+     (let [[value & _] (:rum/args state)]
+       {ctx-key (constantly value)})) ;; hack
 
-    :getChildContext
-    (fn []
-      (this-as this
-        (let [[_ value _child] (gobj/getValueByKeys this "props" "argv")]
-          (js-obj ctx-key value))))
+   :class-properties
+   {:childContextTypes {ctx-key js/React.PropTypes.any.isRequired}}})
 
-    :childContextTypes
-    (js-obj ctx-key (gobj/getValueByKeys js/React "PropTypes" "any" "isRequired"))
+(rum/defc provider < provider-mixin
+  [value child]
+  child)
 
-    :reagent-render
-    (fn [_value child]
-      child)}))
+(def ^:private receiver-mixin
+  {:class-properties
+   {:contextTypes {ctx-key js/React.PropTypes.any.isRequired}}})
 
-(defn receiver [component]
-  "Higher-Order Component"
-  (r/create-class
-   {:displayName
-    "ContextReceiver"
-
-    :shouldComponentUpdate
-    (fn [] true)
-
-    :contextTypes
-    (js-obj ctx-key (gobj/getValueByKeys js/React "PropTypes" "any" "isRequired"))
-
-    :reagent-render
-    (fn [& args]
-      (let [this (r/current-component)
-            value (gobj/getValueByKeys this "context" ctx-key)]
-        (into [component value] args)))}))
+(rum/defcc receiver < receiver-mixin
+  [this component & args]
+  (let [value ((gobj/getValueByKeys this "context" ctx-key))] ;; hack
+    (apply component value args)))
 
 (defn build [data errors on-change]
   {:data data

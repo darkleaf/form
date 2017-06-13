@@ -4,7 +4,8 @@
  :dependencies '[[org.clojure/clojure "1.8.0" :scope "provided"]
                  [org.clojure/clojurescript "1.9.542" :scope "provided"]
 
-                 [reagent "0.6.2"]
+                 #_[reagent "0.6.2"]
+                 [rum "0.10.8"]
 
                  [cider/cider-nrepl "0.15.0-SNAPSHOT" :scope "test"]
                  [refactor-nrepl "2.3.0-SNAPSHOT" :scope "test"]
