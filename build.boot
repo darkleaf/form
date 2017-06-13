@@ -6,6 +6,7 @@
 
                  #_[reagent "0.6.2"]
                  [rum "0.10.8"]
+                 [cljsjs/react-debounce-input "3.0.0-0"]
 
                  [cider/cider-nrepl "0.15.0-SNAPSHOT" :scope "test"]
                  [refactor-nrepl "2.3.0-SNAPSHOT" :scope "test"]

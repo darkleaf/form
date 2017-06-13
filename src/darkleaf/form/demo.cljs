@@ -2,7 +2,9 @@
   (:require
    #_[reagent.core :as r]
    [rum.core :as rum]
+   [cljsjs.react-debounce-input]
    [goog.object :as gobj]
+   [goog.string :as gstr]
    [darkleaf.form.context :as ctx]))
 
 (enable-console-print!)
@@ -17,6 +19,19 @@
             :name "todo 2"
             :complexity 3}]})
 
+(defn opts->js [opts]
+  (reduce-kv
+   (fn [acc k v]
+     (gobj/set acc
+               (gstr/toCamelCase (name k))
+               v)
+     acc)
+   (js-obj)
+   opts))
+
+(defn debounce-input [opts]
+  (js/React.createElement js/DebounceInput (opts->js opts)))
+
 (rum/defc input [id label]
   (ctx/receiver
    (fn [-ctx]
@@ -24,13 +39,16 @@
            value (ctx/get-data ctx)]
        [:div.form-group
         [:label label]
-        [:input.form-control {:type :text
-                              :value value
-                              :on-change #(ctx/set-data
-                                           ctx
-                                           (gobj/getValueByKeys %
-                                                                "target"
-                                                                "value"))}]
+
+        (debounce-input {:class-name "form-control"
+                         :debounce-timeout 300
+                         :value value
+                         :on-change #(ctx/set-data
+                                      ctx
+                                      (gobj/getValueByKeys %
+                                                           "target"
+                                                           "value"))})
+
         [:small.form-text.text-muted "Required"]]))))
 
 (rum/defc nested [id tag opts item]
@@ -59,6 +77,7 @@
               [:div.col-sm-12.my-3
                [:div.card
                 [:div.card-block
-                 (input :name "Name")]]])])))
+                 (input :name "Name")]]])
+      (str @data)])))
 
 (rum/mount (component) (.getElementById js/document "point"))
