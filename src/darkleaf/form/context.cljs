@@ -23,9 +23,9 @@
    {:contextTypes {ctx-key js/React.PropTypes.any.isRequired}}})
 
 (rum/defcc receiver < receiver-mixin
-  [this component & args]
+  [this callback]
   (let [value ((gobj/getValueByKeys this "context" ctx-key))] ;; hack
-    (apply component value args)))
+    (callback value)))
 
 (defn build [data errors on-change]
   {:data data
