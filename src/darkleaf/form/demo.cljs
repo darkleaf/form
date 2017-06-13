@@ -40,7 +40,10 @@
        (ctx/reduce-data
         ctx
         (fn [acc i-ctx]
-          (conj acc (ctx/provider i-ctx item)))
+          (conj acc
+                (rum/with-key
+                  (ctx/provider i-ctx item)
+                  (ctx/get-id i-ctx))))
         [tag opts])))))
 
 (rum/defcs component < (rum/local initial-data ::data)

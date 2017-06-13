@@ -36,6 +36,9 @@
 (defn conj-path [ctx id]
   (update ctx :path conj id))
 
+(defn get-id [ctx]
+  (last (:path ctx)))
+
 (defn get-data [ctx]
   (get-in (:data ctx) (:path ctx)))
 
