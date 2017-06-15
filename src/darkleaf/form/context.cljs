@@ -3,65 +3,39 @@
    [goog.object :as gobj]
    [reagent.core :as r]))
 
-(def ^:private ctx-key "ctx")
+(defprotocol Protocol
+  (nested [this k])
+  (get-data [this])
+  (update-data [this f]))
 
-(def provider
-  (r/create-class
-   {:displayName
-    "ContextProvider"
+(defn set-data [ctx val]
+  (update-data ctx (fn [_old] val)))
 
-    :getChildContext
-    (fn []
-      (this-as this
-        (let [[_ value _child] (gobj/getValueByKeys this "props" "argv")]
-          (js-obj ctx-key value))))
+(deftype Type [path data on-change]
+  Protocol
+  (get-data [_]
+    (get-in data path))
 
-    :childContextTypes
-    (js-obj ctx-key (gobj/getValueByKeys js/React "PropTypes" "any" "isRequired"))
+  (update-data [_ f]
+    (let [new (update-in data path f)]
+      (on-change new)))
 
-    :reagent-render
-    (fn [_value child]
-      child)}))
+  (nested [_ k]
+    (Type. (conj path k) data on-change))
 
-(defn receiver [component]
-  "Higher-Order Component"
-  (r/create-class
-   {:displayName
-    "ContextReceiver"
+  IEquiv
+  (-equiv [this other]
+    (and
+     (= (get-data this)
+        (get-data other))))
 
-    :shouldComponentUpdate
-    (fn [] true)
-
-    :contextTypes
-    (js-obj ctx-key (gobj/getValueByKeys js/React "PropTypes" "any" "isRequired"))
-
-    :reagent-render
-    (fn [& args]
-      (let [this (r/current-component)
-            value (gobj/getValueByKeys this "context" ctx-key)]
-        (into [component value] args)))}))
+  ISeqable
+  (-seq [this]
+    (reduce-kv
+     (fn [acc k _]
+       (conj acc [k (nested this k)]))
+     []
+     (get-data this))))
 
 (defn build [data errors on-change]
-  {:data data
-   :errors  errors
-   :on-change on-change
-   :path []})
-
-(defn conj-path [ctx id]
-  (update ctx :path conj id))
-
-(defn get-data [ctx]
-  (get-in (:data ctx) (:path ctx)))
-
-(defn reduce-data [-ctx f init]
-  (reduce-kv
-   (fn [acc k _]
-     (let [ctx (conj-path -ctx k)]
-       (f acc ctx)))
-   init
-   (get-data -ctx)))
-
-(defn set-data [ctx value]
-  (let [{:keys [data path on-change]} ctx
-        new-data (assoc-in data path value)]
-    (on-change new-data)))
+  (Type. [] data on-change))

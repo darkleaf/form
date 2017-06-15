@@ -16,45 +16,33 @@
             :name "todo 2"
             :complexity 3}]})
 
-(def input
-  (ctx/receiver
-   (fn [-ctx id label]
-     (let [ctx (ctx/conj-path -ctx id)
-           value (ctx/get-data ctx)]
-       [:div.form-group
-        [:label label]
-        [:input.form-control {:type :text
-                              :value value
-                              :on-change #(ctx/set-data ctx
-                                                        (gobj/getValueByKeys %
-                                                                             "target"
-                                                                             "value"))}]
-        [:small.form-text.text-muted "Required"]]))))
-
-(def nested
-  (ctx/receiver
-   (fn [-ctx id tag opts item]
-     (let [ctx (ctx/conj-path -ctx id)]
-       (ctx/reduce-data
-        ctx
-        (fn [acc i-ctx]
-          (conj acc [ctx/provider i-ctx item]))
-        [tag opts])))))
+(defn input [-ctx id label]
+  (let [ctx (ctx/nested -ctx id)
+        value (ctx/get-data ctx)]
+    [:div.form-group
+     [:label label]
+     [:input.form-control {:type :text
+                           :value value
+                           :on-change #(ctx/set-data ctx
+                                                     (gobj/getValueByKeys %
+                                                                          "target"
+                                                                          "value"))}]
+     [:small.form-text.text-muted "Required"]]))
 
 (defn component []
   (let [data (r/atom initial-data)]
     (fn []
-      [ctx/provider (ctx/build @data {} #(reset! data %))
-       [:form
-        [input :name "Name"]
-        [input :created-at "Created at"]
-
-        [:h2 "Tasks"]
-        [nested :tasks :div.row {}
-         [:div.col-sm-12.my-3
-          [:div.card
-           [:div.card-block
-            [input :name "Name"]]]]]]])))
+      (let [f (ctx/build @data nil #(reset! data %))]
+        [:form
+         [input f :name "Name"]
+         [input f :created-at "Created at"]
+         [:h2 "Tasks"]
+         [:div.row
+          (for [[k task-f] (ctx/nested f :t-asks)]
+            [:div.col-sm-12.my-3 {:key k}
+             [:div.card
+              [:div.card-block
+               [input task-f :name "Name"]]]])]]))))
 
 (r/render [component]
           (.getElementById js/document "point"))
