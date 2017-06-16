@@ -5,7 +5,6 @@
                  [org.clojure/clojurescript "1.9.542" :scope "provided"]
 
                  [reagent "0.6.2"]
-                 [cljsjs/react-debounce-input "3.0.0-0" :exclusions [cljsjs/react]]
 
                  [cider/cider-nrepl "0.15.0-SNAPSHOT" :scope "test"]
                  [refactor-nrepl "2.3.0-SNAPSHOT" :scope "test"]

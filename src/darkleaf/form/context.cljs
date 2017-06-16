@@ -47,4 +47,7 @@
      (get-data this))))
 
 (defn build [data errors on-change]
-  (Type. [] data errors on-change))
+  (Type. cljs.core/PersistentQueue.EMPTY
+         data
+         errors
+         on-change))
