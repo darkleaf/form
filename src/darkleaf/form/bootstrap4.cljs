@@ -1,7 +1,6 @@
 (ns darkleaf.form.bootstrap4
   (:require
    [clojure.string :as string]
-   [goog.object :as gobj]
    [darkleaf.form.context :as ctx]))
 
 (defn- class-names [& names]
@@ -10,7 +9,7 @@
        (string/join " ")))
 
 (defn- event->value [e]
-  (gobj/getValueByKeys e "target" "value"))
+  (.. e -target -value))
 
 (defn build-input [display-name constructor]
   (with-meta
@@ -66,7 +65,7 @@
 
 (defn- event->multi-select-value [e]
   (let [options (-> e
-                    (gobj/getValueByKeys "target" "options")
+                    (.. -target -options)
                     (array-seq))]
     (->> options
          (filter #(.-selected %))
@@ -89,3 +88,24 @@
               :let [value (first o)
                     title (second o)]]
           [:option {:value value, :key value} title])]))))
+
+(defn checkbox [top-ctx id]
+  (let [ctx (ctx/nested top-ctx id)
+        value (ctx/get-data ctx)
+        set-value #(ctx/set-data ctx %)
+        errors (ctx/get-own-errors ctx)
+        has-errors? (not-empty errors)]
+    [:div {:class (class-names
+                   "form-check"
+                   (if has-errors? "has-danger"))}
+     [:label.custom-control.custom-checkbox
+      [:input.custom-control-input {:type :checkbox
+                                    :checked value
+                                    :on-change #(set-value
+                                                 (.. % -target -checked))}]
+      [:span.custom-control-indicator]
+      [:span.custom-control-description id]]
+     (for [error errors]
+       ^{:key error} [:div.form-control-feedback (str error)])]))
+
+;; TODO: radio, checkbox collection
