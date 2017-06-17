@@ -8,7 +8,8 @@
 (defprotocol Protocol
   (nested [this k])
   (get-data [this])
-  (get-errors [this])
+  (get-own-errors [this])
+  (get-errors-subtree [this])
   (update-data [this f]))
 
 (defn set-data [ctx val]
@@ -19,9 +20,12 @@
   (get-data [_]
     (get-in data path))
 
-  (get-errors [_]
+  (get-own-errors [_]
     (let [value-path (conj path errors-key)]
       (get-in errors value-path '())))
+
+  (get-errors-subtree [_]
+    (get-in errors path))
 
   (update-data [_ f]
     (let [new (update-in data path f)]
@@ -35,8 +39,8 @@
     (and
      (= (get-data this)
         (get-data other))
-     (= (get-errors this)
-        (get-errors other))))
+     (= (get-errors-subtree this)
+        (get-errors-subtree other))))
 
   ISeqable
   (-seq [this]

@@ -18,7 +18,7 @@
       (let [ctx (ctx/nested top-ctx id)
             value (ctx/get-data ctx)
             set-value #(ctx/set-data ctx %)
-            errors (ctx/get-errors ctx)
+            errors (ctx/get-own-errors ctx)
             has-errors? (not-empty errors)]
         [:div {:class (class-names
                        "form-group"
