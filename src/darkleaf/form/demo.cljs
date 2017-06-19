@@ -21,6 +21,10 @@
 (s/def :root/example-textarea ::string)
 (s/def :root/example-checkbox true?)
 
+(s/def :nested/example-text ::present-string)
+(s/def :root/nested-item (s/keys :req [:nested/example-text]))
+(s/def :root/nested (s/coll-of :root/nested-item))
+
 (s/def ::data (s/keys :req [:root/example-text
                             :root/example-password
                             :root/example-textarea
@@ -40,7 +44,8 @@
   (let [data (r/atom initial-data)]
     (fn []
       (let [errors (->> @data (s/explain-data ::data) (explain-data->errors))
-            f (ctx/build @data errors #(reset! data %))]
+            update (fn [path f] (swap! data update-in path f))
+            f (ctx/build @data errors update)]
         [:div.row
          [:div.col-sm-6
           [:form
@@ -67,8 +72,8 @@
            [:div.card-header "Data"]
            [:div.card-block
             [:pre [:code (with-out-str (pprint @data))]]]]
-          [:div.card.mb-3
-           [:div.card-header "errors"]
+          [:div.card
+           [:div.card-header "Errors"]
            [:div.card-block
             [:pre [:code (with-out-str (pprint errors))]]]]]]))))
 

@@ -15,24 +15,25 @@
 (defn set-data [ctx val]
   (update-data ctx (fn [_old] val)))
 
-(deftype Type [path data errors on-change]
+(deftype Type [path data errors update]
   Protocol
   (get-data [_]
-    (get-in data path))
+    data)
 
   (get-own-errors [_]
-    (let [value-path (conj path errors-key)]
-      (get-in errors value-path '())))
+    (get errors errors-key '()))
 
   (get-errors-subtree [_]
-    (get-in errors path))
+    errors)
 
   (update-data [_ f]
-    (let [new (update-in data path f)]
-      (on-change new)))
+    (update path f))
 
   (nested [_ k]
-    (Type. (conj path k) data errors on-change))
+    (Type. (conj path k)
+           (get data k)
+           (get errors k)
+           update))
 
   IEquiv
   (-equiv [this other]
@@ -50,8 +51,8 @@
      []
      (get-data this))))
 
-(defn build [data errors on-change]
+(defn build [data errors update]
   (Type. cljs.core/PersistentQueue.EMPTY
          data
          errors
-         on-change))
+         update))
