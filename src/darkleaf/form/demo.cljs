@@ -37,8 +37,22 @@
    :root/example-select "second"
    :root/example-multipleselect []
    :root/example-checkbox true
-   :root/nested [{:nested/id 1, :nested/example-text "first"}
-                 {:nested/id 2, :nested/example-text "second"}]})
+   :root/nested [{:nested/id (random-uuid), :nested/example-text "first"}
+                 {:nested/id (random-uuid), :nested/example-text "second"}]})
+
+(defn add-nested-item [data]
+  (update data :root/nested
+          conj {:nested/id (random-uuid)
+                :nested/example-text ""}))
+
+(defn- vec-remove [coll pos]
+  (vec
+   (concat
+    (subvec coll 0 pos)
+    (subvec coll (inc pos)))))
+
+(defn delete-nested-item [data pos]
+  (update data :root/nested vec-remove pos))
 
 (defn component []
   (let [data (r/atom initial-data)]
@@ -60,13 +74,24 @@
 
            [bootstrap/checkbox f :root/example-checkbox]
 
-           [:h2 "Tasks"]
-           [:div.row
-            (for [[_idx task-f] (ctx/nested f :root/nested)]
-              [:div.col-sm-12.my-3 {:key (-> task-f (ctx/get-data) :nested/id)}
-               [:div.card
-                [:div.card-block
-                 [bootstrap/text task-f :nested/example-text]]]])]]]
+           [:div
+            [:h2 "Nested items"]
+            [:div.row
+             (for [[idx task-f] (ctx/nested f :root/nested)
+                   :let [id (-> task-f (ctx/get-data) :nested/id)]]
+               [:div.col-sm-12.my-3 {:key id}
+                [:div.card
+                 [:div.card-block
+                  [bootstrap/text task-f :nested/example-text]
+                  [:button.btn.btn-outline-danger.btn-sm.float-right
+                   {:type :button
+                    :on-click #(swap! data delete-nested-item idx)}
+                   "delete"]]]])]
+            [:button.btn.btn-primary.btn-sm
+             {:type :button
+              :on-click #(swap! data add-nested-item)}
+             "add nested"]]]]
+
          [:div.col-sm-6
           [:div.card.mb-3
            [:div.card-header "Data"]
