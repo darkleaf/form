@@ -10,12 +10,14 @@
   (get-data [this])
   (get-own-errors [this])
   (get-errors-subtree [this])
+  (get-external-opts [this])
+  (get-path [this])
   (update-data [this f]))
 
 (defn set-data [ctx val]
   (update-data ctx (fn [_old] val)))
 
-(deftype Type [path data errors update]
+(deftype Type [path data errors update external-opts]
   Protocol
   (get-data [_]
     data)
@@ -26,6 +28,12 @@
   (get-errors-subtree [_]
     errors)
 
+  (get-external-opts [_]
+    external-opts)
+
+  (get-path [_]
+    path)
+
   (update-data [_ f]
     (update path f))
 
@@ -33,7 +41,8 @@
     (Type. (conj path k)
            (get data k)
            (get errors k)
-           update))
+           update
+           external-opts))
 
   IEquiv
   (-equiv [this other]
@@ -51,8 +60,12 @@
      []
      (get-data this))))
 
-(defn build [data errors update]
-  (Type. cljs.core/PersistentQueue.EMPTY
-         data
-         errors
-         update))
+(defn build
+  ([data errors update external-opts]
+   (Type. cljs.core/PersistentQueue.EMPTY
+          data
+          errors
+          update
+          external-opts))
+  ([data errors update]
+   (build data errors update {})))
