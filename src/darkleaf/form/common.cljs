@@ -1,10 +1,15 @@
 (ns darkleaf.form.common
   (:require
+   [clojure.string :as string]
    [darkleaf.form.context :as ctx]))
 
 (defn label-text [ctx]
-  (let [path (ctx/get-path ctx)]
-    (str path)))
+  (let [path (ctx/get-path ctx)
+        id (last path)]
+    (-> id
+        (name)
+        (string/replace "-" " ")
+        (string/capitalize))))
 
 (defn error-text [ctx error]
   (str error))
