@@ -55,3 +55,15 @@
                            :checked value
                            :on-change #(-> % e/checkbox-value set-value)})]
     [:input input-opts]))
+
+(defn radio [ctx opts]
+  (let [original-value (ctx/get-data ctx)
+        input-value (:value opts)
+        set-value #(ctx/set-data ctx %)
+        input-name (ctx/get-str-path ctx)
+        input-opts (merge opts
+                          {:type :radio
+                           :name input-name
+                           :checked (= original-value input-value)
+                           :on-change #(-> % e/value set-value)})]
+    [:input input-opts]))

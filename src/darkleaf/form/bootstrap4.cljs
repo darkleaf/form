@@ -77,5 +77,20 @@
       [:span.custom-control-description (messages/label ctx)]]
      (errors ctx)]))
 
+(defn radio-select [top-ctx id & {:as opts}]
+  (let [ctx (ctx/nested top-ctx id)
+        options (get opts :options [])]
+    [:div {:class (top-classes ctx "form-group")}
+     [label ctx]
+     (for [o options
+           :let [value (first o)
+                 title (second o)]]
+       [:div.custom-controls-stacked {:key value}
+        [:label.custom-control.custom-radio
+         [common/radio ctx {:class "custom-control-input"
+                            :value value}]
+         [:span.custom-control-indicator]
+         [:span.custom-control-description title]]])
+     [errors ctx]]))
 
 ;; TODO: radio, checkbox collection

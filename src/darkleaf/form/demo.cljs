@@ -35,6 +35,7 @@
    :root/example-password "Some password"
    :root/example-textarea "Some\nbig\ntext"
    :root/example-select "second"
+   :root/example-radio-select "first"
    :root/example-multipleselect []
    :root/example-checkbox true
    :root/nested [{:nested/id (random-uuid), :nested/example-text "first"}
@@ -66,11 +67,13 @@
            [bootstrap/text f :root/example-text]
            [bootstrap/text f :root/example-password :type :password]
            [bootstrap/textarea f :root/example-textarea :rows 5]
-           [bootstrap/select f :root/example-select :options [["first" "First"]
-                                                              ["second" "Second"]]]
+           [bootstrap/select f :root/example-select
+            :options [["first" "First"] ["second" "Second"]]]
+           [bootstrap/radio-select f :root/example-radio-select
+            :options [["first" "First"] ["second" "Second"]]]
+
            [bootstrap/multi-select f :root/example-multipleselect
-            :options [["first" "First"]
-                      ["second" "Second"]]]
+            :options [["first" "First"] ["second" "Second"]]]
 
            [bootstrap/checkbox f :root/example-checkbox]
 
