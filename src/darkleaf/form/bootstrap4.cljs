@@ -15,7 +15,7 @@
     class
     (str classes " " class)))
 
-(defn errors [ctx]
+(defn- errors [ctx]
   (let [errors (ctx/get-own-errors ctx)]
     [:div
      (for [error errors]
@@ -23,10 +23,10 @@
        [:div.form-control-feedback
         (messages/error ctx error)])]))
 
-(defn label [ctx]
+(defn- label [ctx]
   [:label.form-control-label (messages/label ctx)])
 
-(defn top-classes [ctx & classes]
+(defn- top-classes [ctx & classes]
   (let [errors (ctx/get-own-errors ctx)
         has-errors? (not-empty errors)]
     (apply class-names
