@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as string]
    [darkleaf.form.common :as common]
+   [darkleaf.form.messages :as messages]
    [darkleaf.form.context :as ctx]))
 
 (defn- class-names [& names]
@@ -20,10 +21,10 @@
      (for [error errors]
        ^{:key error}
        [:div.form-control-feedback
-        (common/error-text ctx error)])]))
+        (messages/error ctx error)])]))
 
 (defn label [ctx]
-  [:label.form-control-label (common/label-text ctx)])
+  [:label.form-control-label (messages/label ctx)])
 
 (defn top-classes [ctx & classes]
   (let [errors (ctx/get-own-errors ctx)
@@ -73,7 +74,7 @@
      [:label.custom-control.custom-checkbox
       [common/checkbox ctx input-opts]
       [:span.custom-control-indicator]
-      [:span.custom-control-description (common/label-text ctx)]]
+      [:span.custom-control-description (messages/label ctx)]]
      (errors ctx)]))
 
 
