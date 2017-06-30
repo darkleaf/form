@@ -9,6 +9,8 @@
                  [cider/cider-nrepl "0.15.0-SNAPSHOT" :scope "test"]
                  [refactor-nrepl "2.3.0-SNAPSHOT" :scope "test"]
 
+                 [org.clojure/test.check "0.9.0" :scope "test"]
+
                  [pandeiro/boot-http "0.8.3" :scope "test"]
                  [adzerk/boot-cljs "1.7.228-2" :scope "test"]
                  [adzerk/boot-cljs-repl "0.3.3" :scope "test"]

@@ -9,7 +9,7 @@
                     (array-seq))
         selected (filter #(.-selected %) options)
         values (map #(.-value %) selected)]
-    (doall values)))
+    (vec values)))
 
 (defn checkbox-value [e]
   (.. e -target -checked))

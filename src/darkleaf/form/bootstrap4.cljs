@@ -75,7 +75,7 @@
       [common/checkbox ctx input-opts]
       [:span.custom-control-indicator]
       [:span.custom-control-description (messages/label ctx)]]
-     (errors ctx)]))
+     [errors ctx]]))
 
 (defn radio-select [top-ctx id & {:as opts}]
   (let [ctx (ctx/nested top-ctx id)
@@ -93,4 +93,12 @@
          [:span.custom-control-description title]]])
      [errors ctx]]))
 
-;; TODO: radio, checkbox collection
+;; todo: may be reimplement
+(defn remove-nested [ctx idx & {:as opts}]
+  (let [input-opts (-> opts
+                       (update :class add-class "btn")
+                       (merge {:tag :button}))]
+    [common/remove-nested ctx idx input-opts]))
+
+
+;; TODO: checkbox collection
