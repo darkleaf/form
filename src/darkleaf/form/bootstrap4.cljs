@@ -107,4 +107,13 @@
     [common/add-nested ctx builder input-opts]))
 
 
+(defn error-alerts [ctx]
+  (let [errors (ctx/get-own-errors ctx)]
+    [:div
+     (for [error errors]
+       ^{:key error}
+       [:div.alert.alert-danger
+        (messages/error ctx error)])]))
+
+
 ;; TODO: checkbox collection

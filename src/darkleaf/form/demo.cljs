@@ -79,6 +79,7 @@
           [bootstrap/remove-nested items-f idx
            :class "btn-outline-danger btn-sm float-right"
            :text "delete"]]]])
+     [bootstrap/error-alerts items-f]
      [bootstrap/add-nested items-f build-blank-item
       :class "btn-primary btn-sm"]]))
 
