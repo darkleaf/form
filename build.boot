@@ -2,7 +2,7 @@
  :source-paths #{"src"}
  :resource-paths #{"html"}
  :dependencies '[[org.clojure/clojure "1.8.0" :scope "provided"]
-                 [org.clojure/clojurescript "1.9.542" :scope "provided"]
+                 [org.clojure/clojurescript "1.9.671" :scope "provided"]
 
                  [reagent "0.6.2"]
 
@@ -35,4 +35,5 @@
                    :ip "0.0.0.0"
                    :nrepl-opts {:port 40000
                                 :bind "0.0.0.0"})
-        (cljs :source-map true :optimizations :none)))
+        (cljs :optimizations :none
+              :compiler-options {:parallel-build true})))
