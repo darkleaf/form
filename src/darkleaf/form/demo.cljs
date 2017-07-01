@@ -14,18 +14,20 @@
 (enable-console-print!)
 
 (s/def ::string string?)
-(s/def ::present-string (s/and string? #(not (string/blank? %))))
-#_(s/def ::email #(re-matches #"^\S+@\S+$" %))
-(s/def ::password #(< 8 (count %)))
+(s/def ::present-string (s/and ::string #(not (string/blank? %))))
+(s/def ::password (s/and ::string #(or (empty? %) (< 8 (count %)))))
 
-(s/def :text/example-text ::present-string)
-(s/def :text/example-password (s/and ::present-string ::password))
-(s/def :text/data (s/keys :req [:text/example-text
-                                :text/example-password]))
+(s/def :text/required-text ::present-string)
+(s/def :text/required-password (s/and ::present-string ::password))
+(s/def :text/optional-password ::password)
+(s/def :text/data (s/keys :req [:text/required-text
+                                :text/required-password
+                                :text/optional-password]))
 (defn text [f]
   [:form
-   [bootstrap/text f :text/example-text]
-   [bootstrap/text f :text/example-password :type :password]])
+   [bootstrap/text f :text/required-text]
+   [bootstrap/text f :text/required-password :type :password]
+   [bootstrap/text f :text/optional-password :type :password]])
 
 (s/def :textarea/example ::present-string)
 (s/def :textarea/data (s/keys :req [:textarea/example]))
