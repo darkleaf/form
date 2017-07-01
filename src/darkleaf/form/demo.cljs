@@ -80,12 +80,15 @@
 (s/def :nested/id uuid?)
 (s/def :nested/attribute ::present-string)
 (s/def :nested/item (s/keys :req [:nested/id :nested/attribute]))
-(s/def :nested/items (s/coll-of :nested/item))
+(s/def :nested/items (s/coll-of :nested/item :count 3))
 (s/def :nested/data (s/keys :req [:nested/items]))
 (defn nested [data-atom]
   (let [f (build-ctx data-atom :nested/data)
-        items-f (ctx/nested f :nested/items)]
-    [:div
+        items-f (ctx/nested f :nested/items)
+        build-blank-item (fn [] {:nested/id (random-uuid)
+                                 :nested/attribute ""})]
+
+    [:div.my-3
      (for [[idx item-f] items-f
            :let [id (-> item-f (ctx/get-data) :nested/id)]]
        [:div.my-3 {:key id}
@@ -95,37 +98,9 @@
           [bootstrap/text item-f :nested/attribute]
           [bootstrap/remove-nested items-f idx
            :class "btn-outline-danger btn-sm float-right"
-           :text "delete"]]]])]))
-
-
-
-
-#_(defn component []
-    (let [data (r/atom initial-data)]
-      (fn []
-        (let [errors (->> @data (s/explain-data ::data) (explain-data->errors))
-              update (fn [path f] (swap! data update-in path f))
-              f (ctx/build @data errors update)]
-          [:div.row
-           [:div.col-sm-6
-            [:form
-             [:div
-              [:h2 "Nested items"]
-              [:div.row
-               (for [[idx task-f] (ctx/nested f :root/nested)
-                     :let [id (-> task-f (ctx/get-data) :nested/id)]]
-                 [:div.col-sm-12.my-3 {:key id}
-                  [:div.card
-                   [:div.card-block
-                    [bootstrap/text task-f :nested/example-text]
-                    [:button.btn.btn-outline-danger.btn-sm.float-right
-                     {:type :button
-                      :on-click #(swap! data delete-nested-item idx)}
-                     "delete"]]]])]
-              [:button.btn.btn-primary.btn-sm
-               {:type :button
-                :on-click #(swap! data add-nested-item)}
-               "add nested"]]]]]))))
+           :text "delete"]]]])
+     [bootstrap/add-nested items-f build-blank-item
+      :class "btn-primary btn-sm"]]))
 
 (defn- inspect [data-atom spec]
   (let [data @data-atom
@@ -158,7 +133,6 @@
     [container "Multi select" :multi-select/data multi-select]
     [container "Checkbox" :checkbox/data checkbox]
     [container "Nested" :nested/data nested]])
-
 
 (r/render [component]
           (.getElementById js/document "point"))

@@ -59,11 +59,10 @@
 
   ISeqable
   (-seq [this]
-    (reduce-kv
-     (fn [acc k _]
-       (conj acc [k (nested this k)]))
-     []
-     (get-data this))))
+    (let [data (get-data this)
+          update-acc (fn [acc k _]
+                       (conj acc [k (nested this k)]))]
+      (seq (reduce-kv update-acc [] data)))))
 
 (defn build
   ([data errors update external-opts]

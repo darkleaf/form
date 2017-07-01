@@ -100,5 +100,11 @@
                        (merge {:tag :button}))]
     [common/remove-nested ctx idx input-opts]))
 
+(defn add-nested [ctx builder & {:as opts}]
+  (let [input-opts (-> opts
+                       (update :class add-class "btn")
+                       (merge {:tag :button}))]
+    [common/add-nested ctx builder input-opts]))
+
 
 ;; TODO: checkbox collection

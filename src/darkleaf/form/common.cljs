@@ -68,7 +68,6 @@
                            :on-change #(-> % e/value set-value)})]
     [:input input-opts]))
 
-;; todo: add map support
 (defn- remove-by-idx [coll pos]
   (vec
    (concat
@@ -79,6 +78,16 @@
   (let [tag (get opts :tag :div)
         text (get opts :text "remove")
         on-click (fn [] (ctx/update-data ctx #(remove-by-idx % idx)))
+        input-opts (-> opts
+                       (dissoc :tag :text)
+                       (merge {:on-click on-click}))]
+    [tag input-opts text]))
+
+(defn add-nested [ctx builder opts]
+  (let [tag (get opts :tag :div)
+        text (get opts :text "add new")
+        new-item (builder)
+        on-click (fn [] (ctx/update-data ctx #(conj % new-item)))
         input-opts (-> opts
                        (dissoc :tag :text)
                        (merge {:on-click on-click}))]
