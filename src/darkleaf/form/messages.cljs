@@ -3,21 +3,27 @@
    [clojure.string :as string]
    [darkleaf.form.context :as ctx]))
 
-(defn label [ctx]
-  (let [path (ctx/get-path ctx)
-        id (last path)]
-    (-> id
-        (name)
-        (string/replace "-" " ")
-        (string/capitalize))))
+(defn- i18n-label-fallback [path]
+  (-> (last path)
+      (name)
+      (string/replace "-" " ")
+      (string/capitalize)))
 
-(defn i18n-errors-fallback [path error]
+(defn label [ctx]
+  (let [i18n (ctx/get-i18n ctx)
+        i18n-label (get i18n :label (constantly nil))
+        path (ctx/get-path ctx)]
+    (or
+     (i18n-label path)
+     (i18n-label-fallback path))))
+
+(defn- i18n-error-fallback [path error]
   (str error))
 
 (defn error [ctx error]
   (let [i18n (ctx/get-i18n ctx)
-        i18n-errors (get i18n :errors (constantly nil))
+        i18n-error (get i18n :error (constantly nil))
         path (ctx/get-path ctx)]
     (or
-     (i18n-errors path error)
-     (i18n-errors-fallback path error))))
+     (i18n-error path error)
+     (i18n-error-fallback path error))))

@@ -52,6 +52,8 @@
   IEquiv
   (-equiv [this other]
     (and
+     (= (get-path this)
+        (get-path other))
      (= (get-data this)
         (get-data other))
      (= (get-errors-subtree this)
@@ -66,7 +68,7 @@
 
 (defn build
   ([data errors update i18n]
-   (Type. cljs.core/PersistentQueue.EMPTY
+   (Type. []
           data
           errors
           update

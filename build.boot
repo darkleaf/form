@@ -1,22 +1,23 @@
 (merge-env!
  :source-paths #{"src"}
  :resource-paths #{"html"}
- :dependencies '[[org.clojure/clojure "1.8.0" :scope "provided"]
-                 [org.clojure/clojurescript "1.9.671" :scope "provided"]
+ :dependencies '[[org.clojure/clojure       "1.8.0"           :scope "provided"]
+                 [org.clojure/clojurescript "1.9.671"         :scope "provided"]
 
-                 [reagent "0.6.2"]
+                 [reagent                   "0.6.2"]
 
-                 [cider/cider-nrepl "0.15.0-SNAPSHOT" :scope "test"]
-                 [refactor-nrepl "2.3.0-SNAPSHOT" :scope "test"]
+                 [org.clojure/test.check    "0.9.0"           :scope "test"]
+                 [org.clojure/core.match    "0.3.0-alpha4"    :scope "test"]
 
-                 [org.clojure/test.check "0.9.0" :scope "test"]
+                 [cider/cider-nrepl         "0.15.0-SNAPSHOT" :scope "test"]
+                 [refactor-nrepl            "2.3.0-SNAPSHOT"  :scope "test"]
 
-                 [pandeiro/boot-http "0.8.3" :scope "test"]
-                 [adzerk/boot-cljs "1.7.228-2" :scope "test"]
-                 [adzerk/boot-cljs-repl "0.3.3" :scope "test"]
-                 [org.clojure/tools.nrepl "0.2.12" :scope "test"]
-                 [com.cemerick/piggieback "0.2.1" :scope "test"]
-                 [weasel "0.7.0" :scope "test"]])
+                 [pandeiro/boot-http        "0.8.3"           :scope "test"]
+                 [adzerk/boot-cljs          "1.7.228-2"       :scope "test"]
+                 [adzerk/boot-cljs-repl     "0.3.3"           :scope "test"]
+                 [org.clojure/tools.nrepl   "0.2.12"          :scope "test"]
+                 [com.cemerick/piggieback   "0.2.1"           :scope "test"]
+                 [weasel                    "0.7.0"           :scope "test"]])
 
 (require
  '[cider.tasks :refer [add-middleware]]

@@ -3,7 +3,7 @@
    [cljs.spec.alpha :as s]
    [cljs.spec.gen.alpha :as gen]
    [clojure.test.check.generators]
-
+   [cljs.core.match :refer-macros [match]]
    [cljs.pprint :refer [pprint]]
    [clojure.string :as string]
    [reagent.core :as r]
@@ -98,7 +98,7 @@
       [:div.card-block
        [:pre [:code (with-out-str (pprint errors))]]]]]))
 
-(defn- i18n-errors [path error]
+(defn- i18n-error [path error]
   (condp = error
     ::present-string "should be filled"
     ::password "should contains more than 8 symbols"
@@ -109,12 +109,19 @@
     :nested/items "should contains 3 or 4 items"
     nil))
 
+(defn- i18n-label [path]
+  (match path
+         [:nested/items 0 :nested/id] "First item UUID"
+         [:nested/items _ :nested/id] "UUID"
+         :else nil))
+
 (defn- build-ctx [data-atom spec]
   (let [data @data-atom
         errors (->> data (s/explain-data spec) (explain-data->errors))
         update (fn [path f] (swap! data-atom update-in path f))]
     (ctx/build data errors update
-               {:errors i18n-errors})))
+               {:error i18n-error
+                :label i18n-label})))
 
 (defn- container [title spec component]
   (let [data (-> spec s/gen gen/generate)
