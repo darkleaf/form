@@ -100,13 +100,13 @@
 
 (defn- i18n-error [path error]
   (condp = error
-    ::present-string "should be filled"
-    ::password "should contains more than 8 symbols"
-    :select/example "should be \"Foo\" or \"Bar\""
-    :radio-select/example "should be \"Foo\" or \"Bar\""
-    :multi-select/example "should be \"Foo\" or \"Bar\" or both"
-    :checkbox/example "should be checked"
-    :nested/items "should contains 3 or 4 items"
+    ::present-string "can't be blank"
+    ::password "is too short"
+    :select/example "can't be Buzz"
+    :radio-select/example "can't be Buzz"
+    :multi-select/example "can't contain Buzz"
+    :checkbox/example "must be checked"
+    :nested/items "must contain 3 or 4 items"
     nil))
 
 (defn- i18n-label [path]
