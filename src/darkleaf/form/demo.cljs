@@ -63,7 +63,7 @@
 (s/def :nested/id uuid?)
 (s/def :nested/attribute ::present-string)
 (s/def :nested/item (s/keys :req [:nested/id :nested/attribute]))
-(s/def :nested/items (s/coll-of :nested/item :count 3))
+(s/def :nested/items (s/coll-of :nested/item :min-count 3, :max-count 4))
 (s/def :nested/data (s/keys :req [:nested/items]))
 (defn nested [f]
   (let [items-f (ctx/nested f :nested/items)
@@ -98,11 +98,23 @@
       [:div.card-block
        [:pre [:code (with-out-str (pprint errors))]]]]]))
 
+(defn- i18n-errors [path error]
+  (condp = error
+    ::present-string "should be filled"
+    ::password "should contains more than 8 symbols"
+    :select/example "should be \"Foo\" or \"Bar\""
+    :radio-select/example "should be \"Foo\" or \"Bar\""
+    :multi-select/example "should be \"Foo\" or \"Bar\" or both"
+    :checkbox/example "should be checked"
+    :nested/items "should contains 3 or 4 items"
+    nil))
+
 (defn- build-ctx [data-atom spec]
   (let [data @data-atom
         errors (->> data (s/explain-data spec) (explain-data->errors))
         update (fn [path f] (swap! data-atom update-in path f))]
-    (ctx/build data errors update)))
+    (ctx/build data errors update
+               {:errors i18n-errors})))
 
 (defn- container [title spec component]
   (let [data (-> spec s/gen gen/generate)
