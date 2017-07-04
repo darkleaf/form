@@ -3,6 +3,11 @@
    [darkleaf.form.event :as e]
    [darkleaf.form.context :as ctx]))
 
+(defn input-wrapper [ctx tag opts rest]
+  (let [input-opts (merge opts
+                          {:data-path (-> ctx ctx/get-path str)})]
+    (into [tag input-opts] rest)))
+
 (defn input [ctx opts]
   (let [value (ctx/get-data ctx)
         set-value #(ctx/set-data ctx %)
@@ -60,10 +65,8 @@
   (let [original-value (ctx/get-data ctx)
         input-value (:value opts)
         set-value #(ctx/set-data ctx %)
-        input-name (ctx/get-str-path ctx)
         input-opts (merge opts
                           {:type :radio
-                           :name input-name
                            :checked (= original-value input-value)
                            :on-change #(-> % e/value set-value)})]
     [:input input-opts]))

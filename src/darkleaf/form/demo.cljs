@@ -17,17 +17,17 @@
 (s/def ::present-string (s/and ::string #(not (string/blank? %))))
 (s/def ::password (s/and ::string #(or (empty? %) (< 8 (count %)))))
 
-(s/def :text/required-text ::present-string)
-(s/def :text/required-password (s/and ::present-string ::password))
-(s/def :text/optional-password ::password)
-(s/def :text/data (s/keys :req [:text/required-text
-                                :text/required-password
-                                :text/optional-password]))
+(s/def :text/input ::present-string)
+(s/def :text/data (s/keys :req [:text/input]))
 (defn text [f]
   [:form
-   [bootstrap/text f :text/required-text]
-   [bootstrap/text f :text/required-password :type :password]
-   [bootstrap/text f :text/optional-password :type :password]])
+   [bootstrap/text f :text/input]])
+
+(s/def :password/input (s/and ::present-string ::password))
+(s/def :password/data (s/keys :req [:password/input]))
+(defn password [f]
+  [:form
+   [bootstrap/text f :password/input :type :password]])
 
 (s/def :textarea/example ::present-string)
 (s/def :textarea/data (s/keys :req [:textarea/example]))
@@ -136,8 +136,10 @@
 (defn component []
   [:div
    [container "Text" :text/data text]
+   [container "Password" :password/data password]
    [container "Textarea" :textarea/data textarea]
    [container "Select" :select/data select]
+   [container "Radio select" :radio-select/data radio-select]
    [container "Radio select" :radio-select/data radio-select]
    [container "Multi select" :multi-select/data multi-select]
    [container "Checkbox" :checkbox/data checkbox]
@@ -145,3 +147,29 @@
 
 (r/render [component]
           (.getElementById js/document "point"))
+
+;; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+;; React.addons.TestUtils
+
+(let [data (-> :text/data s/gen gen/generate)
+      data-atom (r/atom data)
+      component (fn []
+                  (let [f (build-ctx data-atom :text/data)]
+                    [text f]))
+      container (.createElement js/document "div")
+      component (r/render [component] container)
+      required-text (.querySelector container
+                                    (str "input[data-path='"
+                                         [:text/required-text]
+                                         "']"))]
+  (js/React.addons.TestUtils.Simulate.change required-text
+                                             (clj->js {:target {:value ""}}))
+  (r/flush)
+  (js/console.log
+   (.-innerHTML container))
+
+  (r/unmount-component-at-node container)
+  (.remove container)
+  (prn @data-atom))

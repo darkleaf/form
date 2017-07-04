@@ -1,21 +1,13 @@
 (ns darkleaf.form.bootstrap4
   (:require
-   [clojure.string :as string]
    [darkleaf.form.common :as common]
    [darkleaf.form.messages :as messages]
    [darkleaf.form.context :as ctx]))
 
-(defn- class-names [& names]
-  (->> names
-       (remove nil?)
-       (string/join " ")))
-
 (defn- add-class [classes class]
-  (if (string/blank? classes)
-    class
-    (str classes " " class)))
+  (str classes " " class))
 
-(defn- errors [ctx]
+(defn errors [ctx]
   (let [errors (ctx/get-own-errors ctx)]
     [:div
      (for [error errors]
@@ -23,22 +15,25 @@
        [:div.form-control-feedback
         (messages/error ctx error)])]))
 
-(defn- label [ctx]
+(defn label [ctx]
   [:label.form-control-label (messages/label ctx)])
 
-(defn- top-classes [ctx & classes]
+(defn- top-classes [ctx class]
   (let [errors (ctx/get-own-errors ctx)
         has-errors? (not-empty errors)]
-    (apply class-names
-           (if has-errors? "has-danger")
-           classes)))
+    (str (if has-errors? "has-danger ")
+         class)))
+
+(defn input-wrapper [ctx class & xs]
+  (let [classes (top-classes ctx class)]
+    [common/input-wrapper ctx :div {:class classes} xs]))
 
 (defn text [top-ctx id & {:as opts}]
   (let [ctx (ctx/nested top-ctx id)
         input-opts (-> {:type :text}
                        (merge opts)
                        (update :class add-class "form-control"))]
-    [:div {:class (top-classes ctx "form-group")}
+    [input-wrapper ctx "form-group"
      [label ctx]
      [common/input ctx input-opts]
      [errors ctx]]))
@@ -114,6 +109,3 @@
        ^{:key error}
        [:div.alert.alert-danger
         (messages/error ctx error)])]))
-
-
-;; TODO: checkbox collection

@@ -1,8 +1,4 @@
-(ns darkleaf.form.context
-  (:require
-   [goog.object :as gobj]
-   [reagent.core :as r]
-   [clojure.string :as string]))
+(ns darkleaf.form.context)
 
 (def errors-key ::errors)
 
@@ -17,10 +13,6 @@
 
 (defn set-data [ctx val]
   (update-data ctx (fn [_old] val)))
-
-(defn get-str-path [ctx]
-  (let [path (get-path ctx)]
-    (string/join " " path)))
 
 (deftype Type [path data errors update i18n]
   Protocol
