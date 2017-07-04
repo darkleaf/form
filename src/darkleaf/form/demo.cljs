@@ -11,6 +11,8 @@
    [darkleaf.form.spec-integration :refer [explain-data->errors]]
    [darkleaf.form.bootstrap4 :as bootstrap]))
 
+;; TODO: move to demo folder
+
 (enable-console-print!)
 
 (s/def ::string string?)
@@ -123,7 +125,7 @@
                {:error i18n-error
                 :label i18n-label})))
 
-(defn- container [title spec component]
+(defn- container [title component spec]
   (let [data (-> spec s/gen gen/generate)
         data-atom (r/atom data)]
     (fn []
@@ -135,14 +137,14 @@
 
 (defn component []
   [:div
-   [container "Text" :text/data text]
-   [container "Password" :password/data password]
-   [container "Textarea" :textarea/data textarea]
-   [container "Select" :select/data select]
-   [container "Radio select" :radio-select/data radio-select]
-   [container "Multi select" :multi-select/data multi-select]
-   [container "Checkbox" :checkbox/data checkbox]
-   [container "Nested" :nested/data nested]])
+   [container "Text" text :text/data]
+   [container "Password" password :password/data]
+   [container "Textarea" textarea :textarea/data]
+   [container "Select" select :select/data]
+   [container "Radio select" radio-select :radio-select/data]
+   [container "Multi select" multi-select :multi-select/data]
+   [container "Checkbox" checkbox :checkbox/data]
+   [container "Nested" nested :nested/data]])
 
 (r/render [component]
           (.getElementById js/document "point"))
