@@ -17,48 +17,48 @@
 (s/def ::present-string (s/and ::string #(not (string/blank? %))))
 (s/def ::password (s/and ::string #(or (empty? %) (< 8 (count %)))))
 
-(s/def :text/input ::present-string)
-(s/def :text/data (s/keys :req [:text/input]))
+(s/def :text/attribute ::present-string)
+(s/def :text/data (s/keys :req [:text/attribute]))
 (defn text [f]
   [:form
-   [bootstrap/text f :text/input]])
+   [bootstrap/text f :text/attribute]])
 
-(s/def :password/input (s/and ::present-string ::password))
-(s/def :password/data (s/keys :req [:password/input]))
+(s/def :password/attribute (s/and ::present-string ::password))
+(s/def :password/data (s/keys :req [:password/attribute]))
 (defn password [f]
   [:form
-   [bootstrap/text f :password/input :type :password]])
+   [bootstrap/text f :password/attribute :type :password]])
 
-(s/def :textarea/example ::present-string)
-(s/def :textarea/data (s/keys :req [:textarea/example]))
+(s/def :textarea/attribute ::present-string)
+(s/def :textarea/data (s/keys :req [:textarea/attribute]))
 (defn textarea [f]
   [:form
-   [bootstrap/textarea f :textarea/example :rows 5]])
+   [bootstrap/textarea f :textarea/attribute :rows 5]])
 
-(s/def :select/example #{"foo" "bar"})
-(s/def :select/data (s/keys :req [:select/example]))
+(s/def :select/attribute #{"foo" "bar"})
+(s/def :select/data (s/keys :req [:select/attribute]))
 (defn select [f]
-    [bootstrap/select f :select/example
+    [bootstrap/select f :select/attribute
      :options [["foo" "Foo"] ["bar" "Bar"] ["buzz" "Buzz"]]])
 
-(s/def :radio-select/example #{"foo" "bar"})
-(s/def :radio-select/data (s/keys :req [:radio-select/example]))
+(s/def :radio-select/attribute #{"foo" "bar"})
+(s/def :radio-select/data (s/keys :req [:radio-select/attribute]))
 (defn radio-select [f]
-  [bootstrap/radio-select f :radio-select/example
+  [bootstrap/radio-select f :radio-select/attribute
    :options [["foo" "Foo"] ["bar" "Bar"] ["buzz" "Buzz"]]])
 
-(s/def :multi-select/example (s/with-gen
-                               (s/and vector? #(every? #{"foo" "bar"} %) distinct?)
-                               #(gen/vector-distinct (gen/elements #{"foo" "bar"}))))
-(s/def :multi-select/data (s/keys :req [:multi-select/example]))
+(s/def :multi-select/attribute (s/with-gen
+                                 (s/and vector? #(every? #{"foo" "bar"} %) distinct?)
+                                 #(gen/vector-distinct (gen/elements #{"foo" "bar"}))))
+(s/def :multi-select/data (s/keys :req [:multi-select/attribute]))
 (defn multi-select [f]
-  [bootstrap/multi-select f :multi-select/example
+  [bootstrap/multi-select f :multi-select/attribute
    :options [["foo" "Foo"] ["bar" "Bar"] ["buzz" "Buzz"]]])
 
-(s/def :checkbox/example true?)
-(s/def :checkbox/data (s/keys :req [:checkbox/example]))
+(s/def :checkbox/attribute true?)
+(s/def :checkbox/data (s/keys :req [:checkbox/attribute]))
 (defn checkbox [f]
-  [bootstrap/checkbox f :checkbox/example])
+  [bootstrap/checkbox f :checkbox/attribute])
 
 (s/def :nested/id uuid?)
 (s/def :nested/attribute ::present-string)
@@ -102,10 +102,10 @@
   (condp = error
     ::present-string "can't be blank"
     ::password "is too short"
-    :select/example "can't be Buzz"
-    :radio-select/example "can't be Buzz"
-    :multi-select/example "can't contain Buzz"
-    :checkbox/example "must be checked"
+    :select/attribute "can't be Buzz"
+    :radio-select/attribute "can't be Buzz"
+    :multi-select/attribute "can't contain Buzz"
+    :checkbox/attribute "must be checked"
     :nested/items "must contain 3 or 4 items"
     nil))
 
@@ -139,7 +139,6 @@
    [container "Password" :password/data password]
    [container "Textarea" :textarea/data textarea]
    [container "Select" :select/data select]
-   [container "Radio select" :radio-select/data radio-select]
    [container "Radio select" :radio-select/data radio-select]
    [container "Multi select" :multi-select/data multi-select]
    [container "Checkbox" :checkbox/data checkbox]
