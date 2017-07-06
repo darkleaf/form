@@ -148,29 +148,3 @@
 
 (r/render [component]
           (.getElementById js/document "point"))
-
-;; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-;; React.addons.TestUtils
-
-(let [data (-> :text/data s/gen gen/generate)
-      data-atom (r/atom data)
-      component (fn []
-                  (let [f (build-ctx data-atom :text/data)]
-                    [text f]))
-      container (.createElement js/document "div")
-      component (r/render [component] container)
-      required-text (.querySelector container
-                                    (str "input[data-path='"
-                                         [:text/required-text]
-                                         "']"))]
-  (js/React.addons.TestUtils.Simulate.change required-text
-                                             (clj->js {:target {:value ""}}))
-  (r/flush)
-  (js/console.log
-   (.-innerHTML container))
-
-  (r/unmount-component-at-node container)
-  (.remove container)
-  (prn @data-atom))

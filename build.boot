@@ -1,5 +1,5 @@
 (merge-env!
- :source-paths #{"src"}
+ :source-paths #{"src" "test"}
  :resource-paths #{"html"}
  :dependencies '[[org.clojure/clojure "1.8.0" :scope "provided"]
                  [org.clojure/clojurescript "1.9.671" :scope "provided"]
