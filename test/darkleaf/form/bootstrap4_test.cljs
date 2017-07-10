@@ -6,69 +6,92 @@
             [goog.dom.classlist :as gclasslist]
             [clojure.string :as string]))
 
-;; todo: remove
-(enable-console-print!)
-
-(defn with-rendered [element f]
-  (let [container (.createElement js/document "div")
-        component (r/render element container)
-        react-root (.querySelector container "[data-reactroot]")]
-    (f component react-root)
-    (r/unmount-component-at-node container)
-    (.remove container)))
-
 (defn path-selector  [el path query]
   (let [path-query (str "[data-path='" path "']")
         result-query (str path-query " " query)]
     (.querySelector el result-query)))
 
-;; рендерит корректно
-;; рендерит правильное занчение
-;; рендерит правильный тип
-;; рендерит ошибки
-;; при изменении значения меняет данные и перерендеривает
+(enable-console-print!)
 
-(t/deftest text
-  (let [value "some value"
-        data {:attr value}
-        errors-ids [:error-1 :error-2]
-        errors {:attr {ctx/errors-key errors-ids}}
-        null-errors {}
-        null-update (constantly nil)]
-    (t/testing "render default"
-      (let [f (ctx/build data null-errors null-update)]
-        (with-rendered [sut/text f :attr]
-          (fn [component root]
-            (let [input (.querySelector root "input")]
-              (t/is (= value (.-value input)))
-              (t/is (= "text" (.-type input))))))))
-    (t/testing "render with type"
-      (let [f (ctx/build data null-errors null-update)]
-        (with-rendered [sut/text f :attr :type :password]
-          (fn [component root]
-            (let [input (.querySelector root "input")]
-              (t/is (= "password" (.-type input))))))))
-    (t/testing "render with errors"
-      (let [f (ctx/build data errors null-update)]
-        (with-rendered [sut/text f :attr]
-          (fn [component root]
-            (t/is (gclasslist/contains root "has-danger"))
-            (t/is (every? #(string/includes? (.-outerHTML root) %)
-                          errors-ids))))))))
+(declare ^:dynamic *container*)
+
+(def container-fixture
+  {:before #(set! *container* (.createElement js/document "div"))
+   :after #(doto *container*
+             (r/unmount-component-at-node)
+             (.remove))})
+
+(t/use-fixtures :each container-fixture)
+
+(def ^:private null-update (constantly nil))
+(def ^:private null-errors {})
+
+(defn test-plain-errors [element-builder data path-for-error]
+  (let [cur-errors [:error-1 :error-2]
+        errors (assoc-in {} path-for-error {ctx/errors-key cur-errors})
+        f (ctx/build data errors null-update)
+        el (element-builder f)
+        _ (r/render el *container*)
+        html (.-innerHTML *container*)]
+    (t/is (every? #(string/includes? html %) cur-errors))))
+
+(defn test-i18n-errors [element-builder data path-for-error]
+  (let [cur-errors [:error-1 :error-2]
+        errors (assoc-in {} path-for-error {ctx/errors-key cur-errors})
+        i18n-text "some error"
+        i18n-error (fn [path error]
+                     (when (and
+                            (= path path-for-error)
+                            (= error (first cur-errors)))
+                       i18n-text))
+        f (ctx/build data errors null-update {:error i18n-error})
+        el (element-builder f)
+        _ (r/render el *container*)
+        html (.-innerHTML *container*)]
+    (t/is (string/includes? html i18n-text))))
+
+(let [value "some value"
+      data {:attr value}
+      attr-path [:attr]]
+
+  (t/deftest text-render
+    (let [f (ctx/build data null-errors null-update)
+          el [sut/text f :attr]
+          _ (r/render el *container*)
+          input (.querySelector *container* "input")]
+      (t/is (= value (.-value input)))
+      (t/is (= "text" (.-type input)))))
+
+  (t/deftest text-render-with-type
+    (let [f (ctx/build data null-errors null-update)
+          el [sut/text f :attr :type :password]
+          _ (r/render el *container*)
+          input (.querySelector *container* "input")]
+      (t/is (= "password" (.-type input)))))
+
+  (t/deftest text-change
+    (t/async
+     done
+     (let [new-value "new value"
+           update (fn [path f]
+                    (t/is (= attr-path path))
+                    (t/is (= new-value (f :smth)))
+                    (done))
+           f (ctx/build data null-errors update)
+           el [sut/text f :attr]
+           _ (r/render el *container*)
+           input (.querySelector *container* "input")]
+       (js/React.addons.TestUtils.Simulate.change
+        input
+        (clj->js {:target {:value new-value}})))))
+
+  (t/deftest text-plain-errors
+    (test-plain-errors (fn [f] [sut/text f :attr])
+                       data attr-path))
+
+  (t/deftest text-i18n-errors
+    (test-i18n-errors (fn [f] [sut/text f :attr])
+                      data attr-path)))
 
 (comment
-  (t/run-tests)
-  #_:end-comment)
-
-#_(let [data-atom (r/atom {:text/attribute "foo bar"})]
-
-    (container-render
-     [component]
-     (fn [component container]
-       (let [required-text (path-selector container [:text/attribute] "input")]
-         (js/React.addons.TestUtils.Simulate.change
-          required-text
-          (clj->js {:target {:value ""}}))
-         (r/flush)
-         (js/console.log (.-innerHTML container))
-         (prn @data-atom)))))
+  (t/run-tests))
