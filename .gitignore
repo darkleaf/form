@@ -1,4 +1,8 @@
 .nrepl-port
+*.log
+
 /out
+main.js
+
 /target
 /.cljs_node_repl

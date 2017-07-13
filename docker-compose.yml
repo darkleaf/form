@@ -4,19 +4,12 @@ services:
   app:
     build: .
     working_dir: /usr/src/app
-    command: >-
-      boot
-      wait
-      add-middleware
-      dev
-    environment:
-      - BOOT_LOCAL_REPO=/usr/src/boot_repository
+    command: lein repl :headless :host "0.0.0.0" :port 40000
     ports:
       - "40000:40000"
       - "40001:40001"
-      - "40002:40002"
     volumes:
-      - boot_repository:/usr/src/boot_repository
+      - repository:/usr/src/repository
       - .:/usr/src/app
 volumes:
-  boot_repository:
+  repository:
