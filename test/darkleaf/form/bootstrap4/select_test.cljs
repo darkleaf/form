@@ -1,4 +1,4 @@
-(ns darkleaf.form.bootstrap4.select-text
+(ns darkleaf.form.bootstrap4.select-test
   (:require
    [darkleaf.form.bootstrap4 :as sut]
    [cljs.test :as t :include-macros true]
@@ -24,19 +24,10 @@
         input (utils.render/query-selector "select")]
     (t/is (= value (.-value input)))))
 
-#_(t/deftest change
-    (t/async
-     done
-     (let [new-value "asfd" #_(-> options second first)
-           update (fn [path f]
-                    (t/is (= attr-path path))
-                    (t/is (= new-value (f :smth)))
-                    (done))
-           f (ctx/build data null-errors update)
-           el [sut/select f :some-attr :options options]
-           _ (utils.render/render el)
-           input (utils.render/query-selector "select")]
-       (utils.events/change input new-value))))
+(t/deftest change
+  (utils.common-checks/usual-input-change
+   (fn [f] [sut/select f :some-attr :options options])
+   data attr-path "select"))
 
 (t/deftest plain-errors
   (utils.common-checks/plain-errors

@@ -49,7 +49,7 @@
 (defn select [top-ctx id & {:as opts}]
   (let [ctx (ctx/nested top-ctx id)
         input-opts (update opts :class add-class "form-control custom-select")]
-    [:div {:class (top-classes ctx "form-group")}
+    [input-wrapper ctx "form-group"
      [label ctx]
      [common/select ctx input-opts]
      [errors ctx]]))
