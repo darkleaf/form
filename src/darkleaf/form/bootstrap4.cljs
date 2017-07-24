@@ -57,7 +57,7 @@
 (defn multi-select [top-ctx id & {:as opts}]
   (let [ctx (ctx/nested top-ctx id)
         input-opts (update opts :class add-class "form-control")]
-    [:div {:class (top-classes ctx "form-group")}
+    [input-wrapper ctx "form-group"
      [label ctx]
      [common/multi-select ctx input-opts]
      [errors ctx]]))
@@ -65,7 +65,7 @@
 (defn checkbox [top-ctx id & {:as opts}]
   (let [ctx (ctx/nested top-ctx id)
         input-opts (update opts :class add-class "custom-control-input")]
-    [:div {:class (top-classes ctx "form-check")}
+    [input-wrapper ctx "form-check"
      [:label.custom-control.custom-checkbox
       [common/checkbox ctx input-opts]
       [:span.custom-control-indicator]
@@ -75,7 +75,7 @@
 (defn radio-select [top-ctx id & {:as opts}]
   (let [ctx (ctx/nested top-ctx id)
         options (get opts :options [])]
-    [:div {:class (top-classes ctx "form-group")}
+    [input-wrapper ctx "form-group"
      [label ctx]
      (for [o options
            :let [value (first o)
@@ -100,7 +100,6 @@
                        (update :class add-class "btn")
                        (merge {:tag :button}))]
     [common/add-nested ctx builder input-opts]))
-
 
 (defn error-alerts [ctx]
   (let [errors (ctx/get-own-errors ctx)]

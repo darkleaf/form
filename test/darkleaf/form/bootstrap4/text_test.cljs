@@ -13,45 +13,44 @@
 (def data {:some-attr value})
 (def attr-path [:some-attr])
 
+(defn form-builder [f & opts]
+  (into [sut/text f :some-attr] opts))
+
 (t/deftest render
   (let [f     (ctx/build data utils.blank/errors utils.blank/update)
-        el    [sut/text f :some-attr]
+        el    (form-builder f)
         _     (utils.render/render el)
         input (utils.render/query-selector "input")]
     (t/is (= value (.-value input)))
     (t/is (= "text" (.-type input)))))
 
 (t/deftest render-with-type
-  (let [f     (ctx/build data utils.blank/errors utils.blank/update)
-        el    [sut/text f :some-attr :type :password]
+  (let [type  "password"
+        f     (ctx/build data utils.blank/errors utils.blank/update)
+        el    (form-builder f :type type)
         _     (utils.render/render el)
         input (utils.render/query-selector "input")]
-    (t/is (= "password" (.-type input)))))
+    (t/is (= type (.-type input)))))
 
 (t/deftest change
   (utils.common-checks/usual-input-change
-   (fn [f] [sut/text f :some-attr])
-   data attr-path "input"))
+   form-builder data attr-path "input"))
 
 (t/deftest plain-errors
   (utils.common-checks/plain-errors
-   (fn [f] [sut/text f :some-attr])
-   data attr-path))
+   form-builder data attr-path))
 
 (t/deftest i18n-errors
   (utils.common-checks/i18n-errors
-   (fn [f] [sut/text f :some-attr])
-   data attr-path))
+   form-builder data attr-path))
 
 (t/deftest plain-label
   (utils.common-checks/plain-label
-   (fn [f] [sut/text f :some-attr])
-   data "Some attr"))
+   form-builder data "Some attr"))
 
 (t/deftest i18n-label
   (utils.common-checks/i18n-label
-   (fn [f] [sut/text f :some-attr])
-   data attr-path))
+   form-builder data attr-path))
 
 (comment
   (t/run-tests))

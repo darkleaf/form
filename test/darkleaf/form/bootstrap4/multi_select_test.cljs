@@ -17,6 +17,21 @@
               ["2" "Val 2"]
               ["3" "Val 3"]])
 
+(defn form-builder [f]
+  [sut/multi-select f :some-attr :options options])
+
+(t/deftest render
+  (let [f             (ctx/build data utils.blank/errors utils.blank/update)
+        el            (form-builder f)
+        _             (utils.render/render el)
+        input         (utils.render/query-selector "select")
+        input-options (utils.render/query-selector-all "option")]
+    (t/is (= value (.-value input)))
+    (t/is (.-multiple input))
+    (t/is (=
+           (count options)
+           (count input-options)))))
+
 ;; (t/deftest change
 ;;   (utils.common-checks/usual-input-change
 ;;    (fn [f] [sut/select f :some-attr :options options])
@@ -24,23 +39,19 @@
 
 (t/deftest plain-errors
   (utils.common-checks/plain-errors
-   (fn [f] [sut/multi-select f :some-attr :options options])
-   data attr-path))
+   form-builder data attr-path))
 
 (t/deftest i18n-errors
   (utils.common-checks/i18n-errors
-   (fn [f] [sut/multi-select f :some-attr :options options])
-   data attr-path))
+   form-builder data attr-path))
 
 (t/deftest plain-label
   (utils.common-checks/plain-label
-   (fn [f] [sut/multi-select f :some-attr :options options])
-   data "Some attr"))
+   form-builder data "Some attr"))
 
 (t/deftest i18n-label
   (utils.common-checks/i18n-label
-   (fn [f] [sut/multi-select f :some-attr :options options])
-   data attr-path))
+   form-builder data attr-path))
 
 (comment
   (t/run-tests))

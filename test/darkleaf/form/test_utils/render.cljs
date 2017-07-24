@@ -16,6 +16,11 @@
 (defn query-selector [query]
   (.querySelector *container* query))
 
+(defn query-selector-all [query]
+  (let [node-list (.querySelectorAll *container* query)
+        js-array  (js/Array.prototype.slice.call node-list)]
+    (js->clj js-array)))
+
 (defn path-selector [path query]
   (let [path-query   (str "[data-path='" path "']")
         result-query (str path-query " " query)]
