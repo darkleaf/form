@@ -23,10 +23,9 @@
         input (utils.render/query-selector "input")]
     (t/is (= "checkbox" (.-type input)))))
 
-;; (t/deftest change
-;;   (utils.common-checks/usual-input-change
-;;    (fn [f] [sut/text f :some-attr])
-;;    data attr-path "input"))
+(t/deftest change
+  (utils.common-checks/checkbox-input-change
+   form-builder data attr-path))
 
 (t/deftest plain-errors
   (utils.common-checks/plain-errors

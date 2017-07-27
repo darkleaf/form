@@ -55,7 +55,8 @@
 (defn usual-input-change [element-builder data attr-path input-selector]
   (t/async
    done
-   (let [new-value "new value"
+   (let [value     (get-in data attr-path)
+         new-value "new value"
          update    (fn [path f]
                      (t/is (= attr-path path))
                      (t/is (= new-value (f :smth)))
@@ -64,4 +65,34 @@
          el        (element-builder f)
          _         (utils.render/render el)
          input     (utils.render/path-selector attr-path input-selector)]
+     (t/is (not (= value new-value)))
      (utils.events/change input new-value))))
+
+(defn checkbox-input-change [element-builder data attr-path]
+  (t/async
+   done
+   (let [new-value (not (get-in data attr-path))
+         update    (fn [path f]
+                     (t/is (= attr-path path))
+                     (t/is (= new-value (f :smth)))
+                     (done))
+         f         (ctx/build data utils.blank/errors update)
+         el        (element-builder f)
+         _         (utils.render/render el)
+         input     (utils.render/path-selector attr-path "input")]
+     (utils.events/change-checkbox input new-value))))
+
+(defn multiselect-input-change [element-builder data attr-path new-value]
+  (t/async
+   done
+   (let [value  (get-in data attr-path)
+         update (fn [path f]
+                  (t/is (= attr-path path))
+                  (t/is (= new-value (f :smth)))
+                  (done))
+         f      (ctx/build data utils.blank/errors update)
+         el     (element-builder f)
+         _      (utils.render/render el)
+         input  (utils.render/path-selector attr-path "select")]
+     (t/is (not (= value new-value)))
+     (utils.events/change-multiselect input new-value))))

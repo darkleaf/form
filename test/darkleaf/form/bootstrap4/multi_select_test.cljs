@@ -32,10 +32,9 @@
            (count options)
            (count input-options)))))
 
-;; (t/deftest change
-;;   (utils.common-checks/usual-input-change
-;;    (fn [f] [sut/select f :some-attr :options options])
-;;    data attr-path "select"))
+(t/deftest change
+  (utils.common-checks/multiselect-input-change
+   form-builder data attr-path [(-> options last first)]))
 
 (t/deftest plain-errors
   (utils.common-checks/plain-errors
