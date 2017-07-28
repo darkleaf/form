@@ -11,5 +11,7 @@ services:
     volumes:
       - repository:/usr/src/repository
       - .:/usr/src/app
+    cap_add:
+      - SYS_ADMIN
 volumes:
   repository:
