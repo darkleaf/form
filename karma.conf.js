@@ -4,7 +4,7 @@ module.exports = function(config) {
     browsers: ['ChromiumHeadless'],
 
     frameworks: ['cljs-test'],
-    reporters: ['progress', 'coverage', 'remap-coverage'],
+    reporters: ['progress', 'coverage', 'remap-coverage', 'coveralls'],
     preprocessors: {
       'darkleaf/**/!(*_test).js': ['coverage']
     },
@@ -24,6 +24,8 @@ module.exports = function(config) {
     singleRun: true,
 
     coverageReporter: { type: 'in-memory' },
-    remapCoverageReporter: { html: './coverage' }
+    remapCoverageReporter: {
+      lcovonly: 'coverage'
+    }
   })
 }

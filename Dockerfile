@@ -14,4 +14,6 @@ RUN apk --update-cache \
         udev \
         ttf-dejavu
 
+RUN npm install -g karma-cli
+
 COPY dot_lein /root/.lein
