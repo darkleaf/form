@@ -1,0 +1,12 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker-compose build
+  - docker-compose run app lein cljsbuild once test
+  - docker-compose run app npm install
+
+script:
+  - docker-compose run app node_modules/.bin/karma start
