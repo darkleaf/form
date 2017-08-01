@@ -1,12 +1,12 @@
-(ns darkleaf.form.bootstrap4.multi-select-test
+(ns darkleaf.form-test.bootstrap4.multi-select-test
   (:require
    [darkleaf.form.bootstrap4 :as sut]
    [cljs.test :as t :include-macros true]
    [darkleaf.form.context :as ctx]
-   [darkleaf.form.test-utils.render :as utils.render]
-   [darkleaf.form.test-utils.events :as utils.events]
-   [darkleaf.form.test-utils.common-checks :as utils.common-checks]
-   [darkleaf.form.test-utils.blank :as utils.blank]))
+   [darkleaf.form-test.utils.render :as utils.render]
+   [darkleaf.form-test.utils.events :as utils.events]
+   [darkleaf.form-test.utils.common-checks :as utils.common-checks]
+   [darkleaf.form-test.utils.blank :as utils.blank]))
 
 (t/use-fixtures :each utils.render/container-fixture)
 

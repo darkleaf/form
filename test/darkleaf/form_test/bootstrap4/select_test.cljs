@@ -1,12 +1,12 @@
-(ns darkleaf.form.bootstrap4.radio-select-test
+(ns darkleaf.form-test.bootstrap4.select-test
   (:require
    [darkleaf.form.bootstrap4 :as sut]
    [cljs.test :as t :include-macros true]
    [darkleaf.form.context :as ctx]
-   [darkleaf.form.test-utils.render :as utils.render]
-   [darkleaf.form.test-utils.events :as utils.events]
-   [darkleaf.form.test-utils.common-checks :as utils.common-checks]
-   [darkleaf.form.test-utils.blank :as utils.blank]))
+   [darkleaf.form-test.utils.render :as utils.render]
+   [darkleaf.form-test.utils.events :as utils.events]
+   [darkleaf.form-test.utils.common-checks :as utils.common-checks]
+   [darkleaf.form-test.utils.blank :as utils.blank]))
 
 (t/use-fixtures :each utils.render/container-fixture)
 
@@ -18,22 +18,22 @@
               ["3" "Val 3"]])
 
 (defn form-builder [f]
-  [sut/radio-select f :some-attr :options options])
+  [sut/select f :some-attr :options options])
 
 (t/deftest render
-  (let [f     (ctx/build data utils.blank/errors utils.blank/update)
-        el    (form-builder f)
-        _     (utils.render/render el)
-        inputs (utils.render/query-selector-all "input")]
+  (let [f             (ctx/build data utils.blank/errors utils.blank/update)
+        el            (form-builder f)
+        _             (utils.render/render el)
+        input         (utils.render/query-selector "select")
+        input-options (utils.render/query-selector-all "option")]
+    (t/is (= value (.-value input)))
     (t/is (=
            (count options)
-           (count inputs)))))
+           (count input-options)))))
 
 (t/deftest change
-  ;; There it uses synthetic events and doesn't rerender elements on change.
-  ;; So I can trigger the change event on any radio inputs with any value.
   (utils.common-checks/usual-input-change
-   form-builder data attr-path "input"))
+   form-builder data attr-path "select"))
 
 (t/deftest plain-errors
   (utils.common-checks/plain-errors

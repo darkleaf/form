@@ -6,7 +6,7 @@ module.exports = function(config) {
     frameworks: ['cljs-test'],
     reporters: ['progress', 'coverage', 'remap-coverage', 'coveralls'],
     preprocessors: {
-      'darkleaf/**/!(*_test).js': ['coverage']
+      'darkleaf/form/**.js': ['coverage']
     },
 
     files: [
@@ -17,7 +17,7 @@ module.exports = function(config) {
 
     client: {
       // main function
-      args: ['darkleaf.form.test_runner.run']
+      args: ['darkleaf.form_test.runner.run']
     },
 
     // singleRun set to false does not work!
@@ -25,7 +25,7 @@ module.exports = function(config) {
 
     coverageReporter: { type: 'in-memory' },
     remapCoverageReporter: {
-      lcovonly: 'coverage'
+      lcovonly: 'coverage/lcov.info'
     }
   })
 }

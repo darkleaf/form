@@ -1,9 +1,9 @@
-(ns darkleaf.form.test-utils.common-checks
+(ns darkleaf.form-test.utils.common-checks
   (:require
    [darkleaf.form.context :as ctx]
-   [darkleaf.form.test-utils.render :as utils.render]
-   [darkleaf.form.test-utils.events :as utils.events]
-   [darkleaf.form.test-utils.blank  :as utils.blank]
+   [darkleaf.form-test.utils.render :as utils.render]
+   [darkleaf.form-test.utils.events :as utils.events]
+   [darkleaf.form-test.utils.blank  :as utils.blank]
    [clojure.string :as string]
    [cljs.test :as t :include-macros true]))
 

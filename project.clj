@@ -26,6 +26,6 @@
                         :source-paths ["src" "test"]
                         :compiler {:output-dir "build/test"
                                    :output-to "build/test/main.js"
-                                   :main darkleaf.form.test-runner
+                                   :main darkleaf.form-test.runner
                                    :asset-path "base"
                                    :optimizations :none}}]})
