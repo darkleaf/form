@@ -1,12 +1,11 @@
-sudo: required
+language: clojure
 
-services:
-  - docker
+addons:
+  chrome: stable
 
 before_install:
-  - docker-compose build
-  - docker-compose run app lein cljsbuild once test
-  - docker-compose run app npm install
+  - lein cljsbuild once test
+  - npm install
 
 script:
-  - docker-compose run app karma start
+  - $(npm bin)/karma start

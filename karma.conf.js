@@ -1,7 +1,7 @@
 module.exports = function(config) {
   config.set({
     basePath: 'build/test/',
-    browsers: ['ChromiumHeadless'],
+    browsers: ['ChromeHeadless'],
 
     frameworks: ['cljs-test'],
     reporters: ['progress', 'coverage', 'remap-coverage', 'coveralls'],
