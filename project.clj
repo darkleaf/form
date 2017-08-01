@@ -28,4 +28,5 @@
                                    :output-to "build/test/main.js"
                                    :main darkleaf.form-test.runner
                                    :asset-path "base"
-                                   :optimizations :none}}]})
+                                   :optimizations :none
+                                   :parallel-build true}}]})
