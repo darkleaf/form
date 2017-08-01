@@ -8,5 +8,7 @@ before_install:
   - docker-compose run app lein cljsbuild once test
   - docker-compose run app npm install
 
+  - export
+
 script:
   - docker-compose run app karma start
