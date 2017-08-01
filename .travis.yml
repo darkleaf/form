@@ -7,5 +7,10 @@ install:
   - lein cljsbuild once test
   - npm install
 
+cache:
+  directories:
+    - node_modules
+    - $HOME/.m2
+
 script:
   - $(npm bin)/karma start
