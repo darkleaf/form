@@ -3,7 +3,7 @@ language: clojure
 addons:
   chrome: stable
 
-before_install:
+install:
   - lein cljsbuild once test
   - npm install
 
