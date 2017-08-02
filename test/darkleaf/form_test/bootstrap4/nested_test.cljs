@@ -23,13 +23,13 @@
         el (form-builder f)
         _  (utils.render/render el)]
     (t/testing "idx"
-      (doseq [[idx item] (map-indexed vector vector-data)
+      (doseq [[idx item] (map-indexed vector data)
               :let    [item-div (utils.render/query-selector (str "#item-" (:id item)))
                        item-idx (.. item-div -dataset -idx)]]
         (t/is (= (str idx)
                  item-idx))))
     (t/testing "nested input values"
-      (doseq [[idx item] (map-indexed vector vector-data)
+      (doseq [[idx item] (map-indexed vector data)
               :let       [input (utils.render/path-selector [idx :id] "input")]]
         (t/is (= (str (:id item))
                  (.-value input)))))))

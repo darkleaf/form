@@ -10,7 +10,7 @@
    [darkleaf.form.context :as ctx]
    [darkleaf.form.spec-integration :refer [explain-data->errors]]
    [darkleaf.form.bootstrap4 :as bootstrap]
-   [darkleaf.form-test.meta-test :as meta-test]))
+   [darkleaf.form-test.runner :as runner]))
 
 ;; TODO: move to demo folder
 
@@ -150,4 +150,4 @@
 (r/render [component]
           (.getElementById js/document "point"))
 
-(meta-test/run-all)
+(runner/run nil)
