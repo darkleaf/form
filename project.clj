@@ -17,11 +17,11 @@
   :clean-targets [:target-path "build"]
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src"]
+                        :source-paths ["src" "test"]
                         :figwheel true
                         :compiler {:output-dir "build/dev"
                                    :output-to "build/dev/main.js"
-                                   :main darkleaf.form.demo}}
+                                   :main darkleaf.form-test.demo}}
                        {:id "test"
                         :source-paths ["src" "test"]
                         :compiler {:output-dir "build/test"

@@ -1,4 +1,4 @@
-(ns darkleaf.form.demo
+(ns darkleaf.form-test.demo
   (:require
    [cljs.spec.alpha :as s]
    [cljs.spec.gen.alpha :as gen]
@@ -9,7 +9,8 @@
    [reagent.core :as r]
    [darkleaf.form.context :as ctx]
    [darkleaf.form.spec-integration :refer [explain-data->errors]]
-   [darkleaf.form.bootstrap4 :as bootstrap]))
+   [darkleaf.form.bootstrap4 :as bootstrap]
+   [darkleaf.form-test.meta-test :as meta-test]))
 
 ;; TODO: move to demo folder
 
@@ -148,3 +149,5 @@
 
 (r/render [component]
           (.getElementById js/document "point"))
+
+(meta-test/run-all)
