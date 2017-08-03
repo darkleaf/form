@@ -19,3 +19,6 @@
                   selected? (some #(= opt-value %) value)]]
       (set! (.-selected opt) selected?))
     (js/React.addons.TestUtils.Simulate.change input)))
+
+(defn click [element]
+  (js/React.addons.TestUtils.Simulate.click element))

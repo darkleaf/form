@@ -88,7 +88,7 @@
          [:span.custom-control-description title]]])
      [errors ctx]]))
 
-;; todo: may be reimplement
+;; ctx должен быть вышестоящий, элемент не может удалить себя сам
 (defn remove-nested [ctx idx & {:as opts}]
   (let [input-opts (-> opts
                        (update :class add-class "btn")

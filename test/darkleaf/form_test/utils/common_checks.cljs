@@ -96,3 +96,16 @@
          input  (utils.render/path-selector attr-path "select")]
      (t/is (not (= value new-value)))
      (utils.events/change-multiselect input new-value))))
+
+(defn change-data-by-click [form-builder selector data new-data]
+  (t/async
+   done
+   (let [update  (fn [path f]
+                   (t/is (= new-data
+                            (update-in data path f)))
+                   (done))
+         f       (ctx/build data utils.blank/errors update)
+         el      (form-builder f)
+         _       (utils.render/render el)
+         element (utils.render/query-selector selector)]
+     (utils.events/click element))))
