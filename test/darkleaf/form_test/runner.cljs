@@ -10,7 +10,8 @@
    [darkleaf.form-test.bootstrap4.nested-vector-test]
    [darkleaf.form-test.bootstrap4.nested-map-test]
    [darkleaf.form-test.bootstrap4.remove-nested-test]
-   [darkleaf.form-test.bootstrap4.add-nested-test]))
+   [darkleaf.form-test.bootstrap4.add-nested-test]
+   [darkleaf.form-test.bootstrap4.error-alerts-test]))
 
 (enable-console-print!)
 
