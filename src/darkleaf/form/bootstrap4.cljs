@@ -28,43 +28,47 @@
   (let [classes (top-classes ctx class)]
     [common/input-wrapper ctx :div {:class classes} xs]))
 
-(defn text [top-ctx id & {:as opts}]
+(defn text [top-ctx id & {:keys [input]
+                          :or {input {}}}]
   (let [ctx (ctx/nested top-ctx id)
         input-opts (-> {:type :text}
-                       (merge opts)
+                       (merge input)
                        (update :class add-class "form-control"))]
     [input-wrapper ctx "form-group"
      [label ctx]
      [common/input ctx input-opts]
      [errors ctx]]))
 
-(defn textarea [top-ctx id & {:as opts}]
+(defn textarea [top-ctx id & {:keys [input]
+                              :or {input {}}}]
   (let [ctx (ctx/nested top-ctx id)
-        input-opts (update opts :class add-class "form-control")]
+        input-opts (update input :class add-class "form-control")]
     [input-wrapper ctx "form-group"
      [label ctx]
      [common/textarea ctx input-opts]
      [errors ctx]]))
 
-(defn select [top-ctx id & {:as opts}]
+(defn select [top-ctx id & {:keys [input options]
+                            :or {input {}, options []}}]
   (let [ctx (ctx/nested top-ctx id)
-        input-opts (update opts :class add-class "form-control custom-select")]
+        input-opts (update input :class add-class "form-control custom-select")]
     [input-wrapper ctx "form-group"
      [label ctx]
-     [common/select ctx input-opts]
+     [common/select ctx options input-opts]
      [errors ctx]]))
 
-(defn multi-select [top-ctx id & {:as opts}]
+(defn multi-select [top-ctx id & {:keys [input options]
+                                  :or {input {}, options []}}]
   (let [ctx (ctx/nested top-ctx id)
-        input-opts (update opts :class add-class "form-control")]
+        input-opts (update input :class add-class "form-control")]
     [input-wrapper ctx "form-group"
      [label ctx]
-     [common/multi-select ctx input-opts]
+     [common/multi-select ctx options input-opts]
      [errors ctx]]))
 
-(defn checkbox [top-ctx id & {:as opts}]
+(defn checkbox [top-ctx id & {:keys [input]}]
   (let [ctx (ctx/nested top-ctx id)
-        input-opts (update opts :class add-class "custom-control-input")]
+        input-opts (update input :class add-class "custom-control-input")]
     [input-wrapper ctx "form-check"
      [:label.custom-control.custom-checkbox
       [common/checkbox ctx input-opts]
@@ -72,9 +76,9 @@
       [:span.custom-control-description (messages/label ctx)]]
      [errors ctx]]))
 
-(defn radio-select [top-ctx id & {:as opts}]
-  (let [ctx (ctx/nested top-ctx id)
-        options (get opts :options [])]
+(defn radio-select [top-ctx id & {:keys [options]
+                                  :or {options []}}]
+  (let [ctx (ctx/nested top-ctx id)]
     [input-wrapper ctx "form-group"
      [label ctx]
      (for [o options
@@ -89,17 +93,17 @@
      [errors ctx]]))
 
 ;; ctx должен быть вышестоящий, элемент не может удалить себя сам
-(defn remove-nested [ctx idx & {:as opts}]
+(defn remove-nested-btn [top-ctx idx & {:as opts}]
   (let [input-opts (-> opts
                        (update :class add-class "btn")
                        (merge {:tag :button}))]
-    [common/remove-nested ctx idx input-opts]))
+    [common/remove-nested top-ctx idx input-opts]))
 
-(defn add-nested [ctx builder & {:as opts}]
+(defn add-nested-btn [top-ctx builder & {:as opts}]
   (let [input-opts (-> opts
                        (update :class add-class "btn")
                        (merge {:tag :button}))]
-    [common/add-nested ctx builder input-opts]))
+    [common/add-nested top-ctx builder input-opts]))
 
 (defn error-alerts [ctx]
   (let [errors (ctx/get-own-errors ctx)]

@@ -14,7 +14,7 @@
 
 (defn form-builder [f]
   (let [items-f (ctx/nested f :items)]
-    [sut/add-nested items-f new-item :id "new-item"]))
+    [sut/add-nested-btn items-f new-item :id "new-item"]))
 
 (def data {:items []})
 

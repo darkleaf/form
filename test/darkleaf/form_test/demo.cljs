@@ -30,13 +30,13 @@
 (s/def :password/data (s/keys :req [:password/attribute]))
 (defn password [f]
   [:form
-   [bootstrap/text f :password/attribute :type :password]])
+   [bootstrap/text f :password/attribute, :input {:type :password}]])
 
 (s/def :textarea/attribute ::present-string)
 (s/def :textarea/data (s/keys :req [:textarea/attribute]))
 (defn textarea [f]
   [:form
-   [bootstrap/textarea f :textarea/attribute :rows 5]])
+   [bootstrap/textarea f :textarea/attribute :input {:rows 5}]])
 
 (s/def :select/attribute #{"foo" "bar"})
 (s/def :select/data (s/keys :req [:select/attribute]))
@@ -81,11 +81,11 @@
          [:div.card-block
           [bootstrap/text item-f :nested/id :disabled true]
           [bootstrap/text item-f :nested/attribute]
-          [bootstrap/remove-nested items-f idx
+          [bootstrap/remove-nested-btn items-f idx
            :class "btn-outline-danger btn-sm float-right"
            :text "delete"]]]])
      [bootstrap/error-alerts items-f]
-     [bootstrap/add-nested items-f build-blank-item
+     [bootstrap/add-nested-btn items-f build-blank-item
       :class "btn-primary btn-sm"]]))
 
 (defn- inspect [f]

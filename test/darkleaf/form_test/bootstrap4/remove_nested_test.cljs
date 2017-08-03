@@ -14,7 +14,7 @@
     [:div
      (for [[idx _item-f] items-f]
        [:div {:key idx}
-        [sut/remove-nested items-f idx :id (str "remove-" idx)]])]))
+        [sut/remove-nested-btn items-f idx :id (str "remove-" idx)]])]))
 
 (def data
   {:items [{:id 1}

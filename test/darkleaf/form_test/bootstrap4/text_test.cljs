@@ -27,7 +27,7 @@
 (t/deftest render-with-type
   (let [type  "password"
         f     (ctx/build data utils.blank/errors utils.blank/update)
-        el    (form-builder f :type type)
+        el    (form-builder f :input {:type type})
         _     (utils.render/render el)
         input (utils.render/query-selector "input")]
     (t/is (= type (.-type input)))))

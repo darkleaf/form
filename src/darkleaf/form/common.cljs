@@ -24,33 +24,28 @@
                            :on-change #(-> % e/value set-value)})]
     [:textarea input-opts]))
 
-(defn- select-input [input-opts options]
+(defn- select-input [options input-opts]
   [:select input-opts
    (for [o options
          :let [value (first o)
                title (second o)]]
      [:option {:value value, :key value} title])])
 
-(defn select [ctx opts]
+(defn select [ctx options opts]
   (let [value (ctx/get-data ctx)
         set-value #(ctx/set-data ctx %)
-        options (get opts :options [])
-        input-opts (-> opts
-                       (dissoc :options)
-                       (merge {:value value
-                               :on-change #(-> % e/value set-value)}))]
-    [select-input input-opts options]))
+        input-opts (merge opts {:value value
+                                :on-change #(-> % e/value set-value)})]
+    [select-input options input-opts]))
 
-(defn multi-select [ctx opts]
+(defn multi-select [ctx options opts]
   (let [value (ctx/get-data ctx)
         set-value #(ctx/set-data ctx %)
-        options (get opts :options [])
         input-opts (-> opts
-                       (dissoc :options)
                        (merge {:multiple true
                                :value value
                                :on-change #(-> % e/multi-select-value set-value)}))]
-    [select-input input-opts options]))
+    [select-input options input-opts]))
 
 (defn checkbox [ctx opts]
   (let [value (ctx/get-data ctx)
