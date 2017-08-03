@@ -24,7 +24,6 @@
                                    :main darkleaf.form-test.demo}}
                        {:id "gh-pages"
                         :source-paths ["src" "test"]
-                        :figwheel true
                         :compiler {:output-to "gh-pages.js"
                                    :main darkleaf.form-test.demo
                                    :optimizations :advanced
