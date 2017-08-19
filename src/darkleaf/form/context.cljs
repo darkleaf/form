@@ -2,7 +2,7 @@
 
 (def errors-key ::errors)
 
-(defprotocol Protocol
+(defprotocol PrivateProtocol
   (nested [this k])
   (get-data [this])
   (get-own-errors [this])
@@ -14,8 +14,8 @@
 (defn set-data [ctx val]
   (update-data ctx (fn [_old] val)))
 
-(deftype Type [path data errors update i18n]
-  Protocol
+(deftype Context [path data errors update i18n]
+  PrivateProtocol
   (get-data [_]
     data)
 
@@ -35,11 +35,11 @@
     (update path f))
 
   (nested [_ k]
-    (Type. (conj path k)
-           (get data k)
-           (get errors k)
-           update
-           i18n))
+    (Context. (conj path k)
+              (get data k)
+              (get errors k)
+              update
+              i18n))
 
   IEquiv
   (-equiv [this other]
@@ -60,7 +60,7 @@
 
 (defn build
   ([data errors update i18n]
-   (Type. []
+   (Context. []
           data
           errors
           update
