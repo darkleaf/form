@@ -20,7 +20,7 @@
 
 ```clojure
 [reagent "0.7.0"]
-[darkelaf/form "0.1.0-SNAPSHOT"]
+[darkelaf/form "0.1.0"]
 ```
 
 # Usage example
