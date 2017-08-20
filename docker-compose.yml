@@ -11,7 +11,8 @@ services:
     volumes:
       - repository:/usr/src/repository
       - .:/usr/src/app
-    cap_add:
-      - SYS_ADMIN
+      - ~/.gnupg:/root/.gnupg:ro
+      environment:
+        -GPG_TTY=/dev/console
 volumes:
   repository:
